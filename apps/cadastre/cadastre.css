@@ -1,0 +1,57 @@
+body {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	background-image: none;
+	background-repeat: no-repeat;
+	background-color: #effae5;
+	color: #000000;
+	font-weight: bold;
+}
+table {
+	border: 3px outset #66cc00;
+	font-family: "Times New Roman", Times, serif;
+	font-size: 12px;
+}
+.tabl1 {
+	border: 0px Aucune #F8E1C0;
+}
+.tr1 {
+	border: medium Aucune;
+}
+.td1 {
+	border: thin Aucune;
+}
+.tt1 {
+	font-family: "Times New Roman", Times, serif;
+	font-size: 11mm;
+	font-weight: bolder;
+	background-color: #66cc00;
+
+}
+.tt2 {
+	font-family: "Times New Roman", Times, serif;
+	font-size: 9mm;
+	font-weight: bold;
+	background-color: #66cc00;
+}
+tr {
+	border: medium groove;
+}
+td {
+	border: thin ridge;
+	font-size: 11px;
+	font-family: "Times New Roman", Times, serif;
+}
+.tt3 {
+	font-family: "Times New Roman", Times, serif;
+	font-size: 8mm;
+	background-color: #66cc00;
+
+}
+.tt4 {
+	font-family: "Times New Roman", Times, serif;
+	font-size: 12px;
+	background-color: #66cc00;
+	font-weight: bold;
+
+}

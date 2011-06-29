@@ -1,0 +1,90 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Gismeaux</title><script language="javascript" src="menu.js"></script>
+<link rel="stylesheet" type="text/css" href="menu.css"><style type="text/css">body {
+	margin-left: 0px;
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+	background-image: url(fond1.png);
+	background-repeat: repeat-x;
+}
+</style></head>
+
+<body>
+<div align="center"><img src="ihead.png" align="absmiddle" /></div>
+<div id="conteneurmenu" >
+<script language="Javascript" type="text/javascript">
+// pour éviter le clignotement désagréable
+preChargement();
+</script>
+	<p  id="menu1" class="menu"
+		onmouseover="MontrerMenu('ssmenu1');"
+		onmouseout="CacherDelai();" onload="MontrerMenu('ssmenu1');">
+		
+	<a href="accueil.html" target="mainFrame"
+		onmouseover="MontrerMenu('ssmenu1');"
+		onfocus="MontrerMenu('ssmenu1');">Accueil<span>&nbsp;</span></a>    </p>
+    
+<!-- ----------------------------------------- -->
+    <p id="menu2" class="menu"
+		onmouseout="CacherDelai();"
+		onmouseover="MontrerMenu('ssmenu2');">
+      <a href=""
+		onfocus="MontrerMenu('ssmenu2');">Interface<span>&nbsp;</span></a>
+    </p>
+    <ul id="ssmenu2" class="ssmenu"
+		onmouseover="AnnulerCacher();"
+		onmouseout="CacherDelai();"
+		onfocus="AnnulerCacher();"
+		onblur="CacherDelai();">
+	<li>
+		<a href="../../interface/Manuel.pdf" target="_blank">La documentation<span>&nbsp;</span></a>
+	</li>
+	<!--<li>
+		<a href="http://">La localisation<span>&nbsp;;</span></a>
+	</li>
+	<li>
+		<a href="http://">Outil de selection.</a>
+	</li>-->
+    </ul>
+<!-- ----------------------------------------- -->
+	<p id="menu3" class="menu"
+		onmouseover="MontrerMenu('ssmenu3');"
+		onmouseout="CacherDelai();">
+      <a href="#"
+		onfocus="MontrerMenu('ssmenu3');">Back-office<span>.</span></a>
+	</p>
+	 <ul id="ssmenu3" class="ssmenu"
+		onmouseover="AnnulerCacher();"
+		onmouseout="CacherDelai();"
+		onfocus="AnnulerCacher();"
+		onblur="CacherDelai();">
+	<li>
+		Bient&ocirc;t la documentation
+	</li>
+	</ul>
+<!-- ----------------------------------------- -->
+   
+    <p id="menu4" class="menu"
+		onmouseout="CacherDelai();"
+		onmouseover="MontrerMenu('ssmenu4');">
+	  <a href="http://www.pays.meaux.fr/" target="_blank"
+		onfocus="MontrerMenu('ssmenu4');">D&eacute;monstration<span>.</span></a>
+    </p>
+</div>
+<script language="Javascript" type="text/javascript">var nbmenu=4;
+suivre_le_scroll = false;
+marge_en_haut_de_page = 0;
+top_menu=0;
+top_ssmenu=26;
+Chargement();
+</script>
+
+<div align="center" style="width:auto"></div>
+<div>&nbsp;</div>
+
+</body>
+</html>

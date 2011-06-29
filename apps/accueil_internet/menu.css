@@ -1,0 +1,115 @@
+ /***** menu CSS *****/
+ @media print {
+ /*A l'impression on cache le menu, marche au moins pour IE, Moz et Opéra.*/
+ .menu, .ssmenu {
+ visibility:hidden;
+ }
+ }
+
+ .menu, .ssmenu {
+ background-color:#163274;
+ color:white;
+ font-size:12px;
+ /*font-weight:bold;*/
+ font-family:"Comic sans MS", "MS Sans Serif", "sans-serif", Verdana, Arial;
+ /*border:1px solid #EFB;*/
+ padding:1px;
+ /* width et margin sont au cas où le javascript est désactivé. */
+ width:15em;
+ margin:1em;
+ }
+ /* .menu = les cases toujours visibles (comme Fichier, Edition... dans un logiciel) */
+ .menu {
+ text-align:center;
+ }
+ /* .ssmenu = Les parties "déroulantes" qui s'affiche au survol d'un .menu */
+/*.ssmenu {
+ /* aller pour faire joli sur IE, un petit effet de dégradé !
+ Pour voir d'autres effets :
+ http://msdn.microsoft.com/workshop/samples/author/dhtml/DXTidemo/DXTidemo.htm
+ Par exemple :
+ transparence à 25% = opacité à 75%:
+ FILTER: progid:DXImageTransform.Microsoft.Alpha( style=0,opacity=75);
+ "Glow" :
+ FILTER: progid:DXImageTransform.Microsoft.Glow(color=#ffdead,strength=5);
+ Ombre en bas à droite, 5 px :
+ FILTER: progid:DXImageTransform.Microsoft.Shadow(direction=135,color=#ff8c00,strength=5);
+ */
+/* FILTER: progid:DXImageTransform.Microsoft.Gradient(gradientType=0,startColorStr=#AA8922,endColorStr=#543210);
+ white-space : no-break;
+ }*/
+
+ .menu span, .ssmenu span {
+ /* Ne pas toucher
+ C'est pour cacher les ; en fin de <li>, ce qui permet aux synthèse vocales de prendre une
+ pause dans l'élocution */
+ display:none;
+ }
+
+ .ssmenu ul, .ssmenu li {
+ /* Ne pas trop toucher.
+ Les items (les <li>) des sous-menus, notamment pour enlever les puces des liste */
+ padding:0;
+ margin:0;
+ list-style-type:none;
+ }
+
+ .menu a, .ssmenu a, .menu a:visited, .ssmenu a:visited {
+ /* Les liens qui ne sont pas sous le curseur. */
+ color:white;
+ padding:2px 1px;
+ text-decoration:none;
+ /* Ne pas modifier le block */
+ display:block;
+ /* Un width:100% fait planter Mozilla, sans le width:100% c'est IE et Opera... La combinaison
+ aucun width et height:100% marche sur tous, donc ne pas toucher ces 2 lignes */
+ /* height:100%;
+ margin:0px;*/
+ margin:0px;
+ width:100%;
+ }
+ html>body .menu a, html>body .menu a:visited, html>body .menu a:hover, html>body .menu a:active,
+ html>body .ssmenu a, html>body .ssmenu a:visited, html>body .ssmenu a:hover, html>body .ssmenu a:active {
+ width:auto;
+ }
+
+ .ssmenu ul:hover, .ssmenu li:hover, .ssmenu a:hover, .ssmenu a:focus, .ssmenu a:active, .menu a:hover, .menu a:focus, .menu a:active {
+ /* Les liens sous le curseur.
+ On change les couleurs du texte et de fond, et on enlève le soulignement.
+ */
+ background-color:#08F;
+ color:#ffb591;
+ text-decoration:none;
+ }
+
+ 
+ img {
+ /* Si on met une image dans un lien (par exemple un logo à gauche du lien), pas de bordure
+ car c'est vilain :-p */
+ border:none;
+ }
+
+ .ssmenu img {
+ /* un petit espacement entre l'image et le texte du lien <a href="..."><img.../>blabla</a> */
+ margin-right:2px;
+ }
+
+ .ssmenu img.hr {
+ /* Encore un peu expérimental, un <hr /> entre deux items pour faire un "séparateur"... */
+ margin-top:1px;
+ margin-bottom:1px;
+ margin-left:0;
+ margin-right:0;
+ width:100%;
+ display:block;
+ }
+
+ /*
+ Bref... pour résumer, ce qu'il y a à modifier à la base, c'est :
+ - couleurs, police, bordure.
+ - l'effet spécial IE pour les ssmenu si on aime ça...
+ - police et couleurs des liens "non survolés" et "survolés".
+ */
+
+
+

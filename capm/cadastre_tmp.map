@@ -1,0 +1,459 @@
+MAP 
+NAME cadastre 
+STATUS on 
+SIZE 800 559 
+UNITS meters 
+IMAGECOLOR 255 255 255 
+FONTSET"fonts/fontset.txt" 
+OUTPUTFORMAT 
+NAME jpg 
+DRIVER "GD/JPEG" 
+MIMETYPE "image/jpeg" 
+IMAGEMODE RGB 
+EXTENSION "jpeg" 
+FORMATOPTION "INTERLACE=OFF" 
+FORMATOPTION "QUALITY=75" 
+END 
+OUTPUTFORMAT 
+NAME 'AGG' 
+DRIVER AGG/jpeg 
+IMAGEMODE RGB 
+END 
+OUTPUTFORMAT 
+NAME png 
+DRIVER "GD/PNG" 
+MIMETYPE "image/png" 
+IMAGEMODE RGB 
+EXTENSION "png" 
+FORMATOPTION "INTERLACE=OFF" 
+FORMATOPTION "QUALITY=100" 
+END 
+PROJECTION 
+"init=IGNF:RGF93CC49" 
+END 
+WEB 
+TEMPLATE capm_svg.php 
+IMAGEPATH "/home/sig/gismeaux/application/tmp/" 
+IMAGEURL "/tmp/" 
+LOG /home/sig/gismeaux/application/tmp/mapserver.log 
+END 
+  SCALEBAR
+    IMAGECOLOR 0 0 0
+    LABEL
+      COLOR 0 0 0
+      SIZE TINY
+    END
+    STYLE 1
+    SIZE 100 2
+    COLOR 0 0 0
+    UNITS meters
+    INTERVALS 4
+    TRANSPARENT TRUE
+    STATUS EMBED
+  END
+#BIBLIO_SYMBOLE# 
+SYMBOL 
+NAME 'circle' 
+TYPE ELLIPSE 
+POINTS 1 1 END 
+FILLED false 
+END 
+SYMBOL 
+NAME 'agrille' 
+TYPE vector 
+POINTS 
+#rect 
+0.1 0 
+0.1 0.65 
+0.9 0.65 
+0.9 0 
+0.1 0 
+-99 -99 
+#cercle 
+0.5 0.05 
+0.4 0.075 
+0.35 0.125 
+0.325 0.225 
+0.35 0.325 
+0.4 0.375 
+0.5 0.4 
+0.6 0.375 
+0.625 0.325 
+0.675 0.225 
+0.6 0.075 
+0.5 0.05 
+-99 -99 
+#demi cercle 
+0.1 0.65 
+0.25 0.55 
+0.5 0.5 
+0.75 0.55 
+0.9 0.65 
+-99 -99 
+#rect grille 
+0.3 0.65 
+0.3 1 
+0.7 1 
+0.7 0.65 
+-99 -99 
+#ligne grille 
+0.325 0.725 
+0.675 0.725 
+-99 -99 
+0.325 0.825 
+0.675 0.825 
+-99 -99 
+0.325 0.925 
+0.675 0.925 
+-99 -99 
+END 
+FILLed false 
+end 
+SYMBOL 
+NAME 'avaloir' 
+TYPE vector 
+POINTS 
+0 0 
+0 1 
+1 1 
+1 0 
+0 0 
+-99 -99 
+0 1  
+0.25 0.87 
+0.5 0.80 
+0.75 0.87 
+1 1 
+-99 -99 
+0.5 0.1 
+0.35 0.15 
+0.28 0.25 
+0.25 0.35 
+0.28 0.45 
+0.35 0.55 
+0.5 0.6 
+0.65 0.55 
+0.72 0.45 
+0.75 0.35 
+0.72 0.25 
+0.65 0.15 
+0.5 0.1 
+END 
+FILLED false 
+END 
+SYMBOL 
+NAME 'carre' 
+TYPE vector 
+POINTS 
+0 0 
+0 1 
+1 1 
+1 0 
+0 0 
+END 
+FILLed false 
+end 
+SYMBOL 
+NAME 'croix' 
+TYPE vector 
+POINTS 
+0 0 
+1 1 
+-99 -99 
+0 1 
+1 0 
+END 
+end 
+SYMBOL 
+NAME 'grille' 
+TYPE vector 
+POINTS 
+0 0 
+0 1 
+1 1 
+1 0 
+0 0 
+-99 -99  
+0 0.75 
+1 0.75 
+-99 -99 
+0 0.5 
+1 0.5 
+-99 -99 
+0 0.25 
+1 0.25 
+END 
+end  
+SYMBOL 
+NAME 'regard' 
+TYPE ELLIPSE 
+POINTS 1 1 END 
+FILLED TRUE 
+END 
+LAYER 
+NAME "ortho-photo50" group "ortho-photo" 
+STATUS on 
+PROJECTION 
+"init=IGNF:RGF93CC49" 
+END 
+TYPE raster 
+TILEINDEX "/home/sig/gismeaux/application/capm/data/orthotiff.shp" 
+TILEITEM "location" 
+END 
+ 
+LAYER 
+NAME "ortho-photo2000" group "ortho-photo" 
+STATUS on 
+PROJECTION 
+"init=IGNF:RGF93CC49" 
+END 
+TYPE raster 
+TILEINDEX "/home/sig/carte/script_tile_orthos/doq.shp" 
+TILEITEM "location" 
+MAXSCALE 1500 
+MINSCALE 10
+END
+ 
+LAYER 
+NAME "ortho-photo1000" group "ortho-photo" 
+STATUS on 
+PROJECTION 
+"init=IGNF:RGF93CC49" 
+END 
+TYPE raster 
+TILEINDEX "/home/sig/carte/script_tile_orthos/dop.shp" 
+TILEITEM "location"
+ MAXSCALE 100000 
+MINSCALE 1500
+
+END 
+ 
+LAYER 
+CONNECTIONTYPE postgis 
+NAME "Parcelle_ville" group "Parcelle_ville" 
+CONNECTION "user=postgres password=postgres dbname=meaux host=localhost" 
+DATA "the_geom from (select the_geom from cadastre.parcelle1 where  prop1 in(select prop1 from cadastre.propriet where dnuper in (select dnuper from admin_svg.commune where idcommune like '770284' or idagglo like '770284')) and parcelle1.code_insee like '770284') as neo using unique the_geom" 
+STATUS on 
+PROJECTION 
+"init=IGNF:RGF93CC49" 
+END 
+TYPE polygon 
+CLASS 
+STYLE 
+COLOR 131 214 164 
+END 
+STYLE 
+OUTLINECOLOR 0 0 0 
+END 
+END 
+END 
+ 
+LAYER 
+CONNECTIONTYPE postgis 
+NAME "Bati_dur" group "batiment" 
+CONNECTION "user=postgres password=postgres dbname=meaux host=localhost" 
+DATA "the_geom from cadastre.batiment using unique the_geom" 
+STATUS on 
+PROJECTION 
+"init=IGNF:RGF93CC49" 
+END 
+TYPE polygon 
+FILTER "code_insee like '770284' or code_insee is null" 
+CLASS 
+EXPRESSION ('[constructi]' eq 'Bati dur') 
+STYLE 
+COLOR 190 190 190 
+END 
+END 
+END 
+ 
+LAYER 
+CONNECTIONTYPE postgis 
+NAME "Bati_leger" group "batiment" 
+CONNECTION "user=postgres password=postgres dbname=meaux host=localhost" 
+DATA "the_geom from cadastre.batiment using unique the_geom" 
+STATUS on 
+PROJECTION 
+"init=IGNF:RGF93CC49" 
+END 
+TYPE polygon 
+FILTER "code_insee like '770284' or code_insee is null" 
+CLASS 
+EXPRESSION ('[constructi]' eq 'Bati leger') 
+STYLE 
+COLOR 220 220 220 
+END 
+END 
+END 
+ 
+LAYER 
+CONNECTIONTYPE postgis 
+NAME "habillage" group "habillage" 
+CONNECTION "user=postgres password=postgres dbname=meaux host=localhost" 
+DATA "the_geom from cadastre.t_line using unique oid" 
+STATUS on 
+PROJECTION 
+"init=IGNF:RGF93CC49" 
+END 
+TYPE line 
+FILTER "code_insee like '770284' or code_insee is null" 
+CLASS 
+STYLE 
+OUTLINECOLOR 50 50 50 
+symbol "circle" 
+SIZE 0.1 
+END 
+END 
+END 
+ 
+LAYER 
+CONNECTIONTYPE postgis 
+NAME "nom_voie" group "nom_voie" 
+CONNECTION "user=postgres password=postgres dbname=meaux host=localhost" 
+DATA "the_geom from cadastre.nomvoie using unique the_geom" 
+STATUS on 
+PROJECTION 
+"init=IGNF:RGF93CC49" 
+END 
+TYPE annotation 
+FILTER "code_insee like '770284' or code_insee is null" 
+CLASS 
+text ([texte]  [texte2]  [texte3]  [texte4]  [texte5]  [texte6]  [texte7]  [texte8]  [texte9]  [texte10]) 
+label 
+angle follow 
+type truetype 
+font "arial" 
+position cc 
+size 10 
+COLOR 0 0 0 
+END 
+END 
+END 
+ 
+LAYER 
+CONNECTIONTYPE postgis 
+NAME "num_voie" group "num_voie" 
+CONNECTION "user=postgres password=postgres dbname=meaux host=localhost" 
+DATA "the_geom from cadastre.numvoie using unique the_geom" 
+STATUS on 
+PROJECTION 
+"init=IGNF:RGF93CC49" 
+END 
+TYPE annotation 
+FILTER "code_insee like '770284' or code_insee is null" 
+CLASS 
+text ([texte]) 
+label 
+angle follow 
+type truetype 
+font "arial" 
+position cc 
+size 8 
+COLOR 0 0 255 
+END 
+END 
+END 
+ 
+LAYER 
+CONNECTIONTYPE postgis 
+NAME "ref_cadastrale" group "ref_cadastrale" 
+CONNECTION "user=postgres password=postgres dbname=meaux host=localhost" 
+DATA "the_geom from cadastre.refcadastre using unique the_geom" 
+STATUS on 
+PROJECTION 
+"init=IGNF:RGF93CC49" 
+END 
+TYPE annotation 
+FILTER "code_insee like '770284' or code_insee is null" 
+CLASS 
+text ([identifiant]) 
+label 
+angle follow 
+type truetype 
+font "arial" 
+position cc 
+size 3 
+COLOR 0 0 136 
+END 
+END 
+END 
+ 
+LAYER 
+CONNECTIONTYPE postgis 
+NAME "parcelle" group "parcelle" 
+CONNECTION "user=postgres password=postgres dbname=meaux host=localhost" 
+DATA "the_geom from cadastre.parcelle using unique the_geom" 
+STATUS on 
+PROJECTION 
+"init=IGNF:RGF93CC49" 
+END 
+TYPE polygon 
+FILTER "identifian in ('284000BV0040','')" 
+LABELITEM identifian 
+CLASS 
+COLOR 150 254 150 
+LABEL 
+TYPE truetype 
+ANTIALIAS true 
+FONT "arial" 
+POSITION cc 
+size 10 
+END 
+END 
+TRANSPARENCY 70 
+END 
+ 
+LAYER 
+CONNECTIONTYPE postgis 
+NAME "parcelle" group "parcelle" 
+CONNECTION "user=postgres password=postgres dbname=meaux host=localhost" 
+DATA "the_geom from cadastre.parcelle using unique the_geom" 
+STATUS on 
+PROJECTION 
+"init=IGNF:RGF93CC49" 
+END 
+TYPE polygon 
+FILTER "code_insee like '770284' or code_insee is null" 
+CLASS 
+STYLE 
+COLOR 128 128 128 
+OPACITY 5 
+END 
+STYLE 
+OUTLINECOLOR 0 0 0 
+END 
+END 
+END 
+ 
+LAYER 
+CONNECTIONTYPE postgis 
+NAME "cotation" group "cotation" 
+CONNECTION "user=postgres password=postgres dbname=meaux host=localhost" 
+DATA "the_geom FROM admin_svg.temp_cotation using unique the_geom" 
+STATUS on 
+PROJECTION 
+"init=IGNF:RGF93CC49" 
+END 
+TYPE line 
+FILTER "session_temp like '%sess%'" 
+LABELITEM valeur 
+CLASS 
+EXPRESSION ('[type]' eq 'line') 
+LABEL 
+COLOR 255 0 0 
+ANGLE auto 
+TYPE truetype 
+ANTIALIAS true 
+FONT "arial" 
+POSITION uc 
+MINSIZE 10 
+MAXSIZE 15 
+END 
+OUTLINECOLOR  0 0 255 
+END 
+CLASS 
+EXPRESSION ('[type]' eq 'fleche') 
+OUTLINECOLOR 255 0 0 
+END 
+END 
+END

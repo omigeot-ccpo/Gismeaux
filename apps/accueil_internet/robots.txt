@@ -1,0 +1,3 @@
+User-agent: Googlebot
+Disallow: /images/
+Sitemap : http://www.carto.meaux.fr/sitemap.xml

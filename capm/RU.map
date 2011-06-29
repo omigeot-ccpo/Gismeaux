@@ -1,0 +1,642 @@
+MAP 
+NAME RU 
+STATUS on 
+SIZE 3100 2600 
+UNITS meters 
+IMAGECOLOR 255 255 255 
+FONTSET"fonts/fontset.txt" 
+OUTPUTFORMAT 
+NAME jpg 
+DRIVER "GD/JPEG" 
+MIMETYPE "image/jpeg" 
+IMAGEMODE RGB 
+EXTENSION "jpeg" 
+FORMATOPTION "INTERLACE=OFF" 
+FORMATOPTION "QUALITY=75" 
+END 
+OUTPUTFORMAT 
+NAME 'AGG' 
+DRIVER AGG/jpeg 
+IMAGEMODE RGB 
+END 
+OUTPUTFORMAT 
+NAME png 
+DRIVER "GD/PNG" 
+MIMETYPE "image/png" 
+IMAGEMODE RGB 
+EXTENSION "png" 
+FORMATOPTION "INTERLACE=OFF" 
+FORMATOPTION "QUALITY=100" 
+END 
+PROJECTION 
+"+init=epsg:3949" 
+END 
+WEB 
+TEMPLATE capm_svg.php 
+IMAGEPATH "/var/www/application/tmp/" 
+IMAGEURL "/tmp/" 
+LOG /home/sig/gismeaux/application/tmp/mapserver.log 
+END 
+#BIBLIO_SYMBOLE# 
+SYMBOL 
+NAME 'circle' 
+TYPE ELLIPSE 
+POINTS 1 1 END 
+FILLED false 
+END 
+SYMBOL 
+NAME 'agrille' 
+TYPE vector 
+POINTS 
+#rect 
+0.1 0 
+0.1 0.65 
+0.9 0.65 
+0.9 0 
+0.1 0 
+-99 -99 
+#cercle 
+0.5 0.05 
+0.4 0.075 
+0.35 0.125 
+0.325 0.225 
+0.35 0.325 
+0.4 0.375 
+0.5 0.4 
+0.6 0.375 
+0.625 0.325 
+0.675 0.225 
+0.6 0.075 
+0.5 0.05 
+-99 -99 
+#demi cercle 
+0.1 0.65 
+0.25 0.55 
+0.5 0.5 
+0.75 0.55 
+0.9 0.65 
+-99 -99 
+#rect grille 
+0.3 0.65 
+0.3 1 
+0.7 1 
+0.7 0.65 
+-99 -99 
+#ligne grille 
+0.325 0.725 
+0.675 0.725 
+-99 -99 
+0.325 0.825 
+0.675 0.825 
+-99 -99 
+0.325 0.925 
+0.675 0.925 
+-99 -99 
+END 
+FILLed false 
+end 
+SYMBOL 
+NAME 'avaloir' 
+TYPE vector 
+POINTS 
+0 0 
+0 1 
+1 1 
+1 0 
+0 0 
+-99 -99 
+0 1  
+0.25 0.87 
+0.5 0.80 
+0.75 0.87 
+1 1 
+-99 -99 
+0.5 0.1 
+0.35 0.15 
+0.28 0.25 
+0.25 0.35 
+0.28 0.45 
+0.35 0.55 
+0.5 0.6 
+0.65 0.55 
+0.72 0.45 
+0.75 0.35 
+0.72 0.25 
+0.65 0.15 
+0.5 0.1 
+END 
+FILLED false 
+END 
+SYMBOL 
+NAME 'carre' 
+TYPE vector 
+POINTS 
+0 0 
+0 1 
+1 1 
+1 0 
+0 0 
+END 
+FILLed false 
+end 
+SYMBOL 
+NAME 'croix' 
+TYPE vector 
+POINTS 
+0 0 
+1 1 
+-99 -99 
+0 1 
+1 0 
+END 
+end 
+SYMBOL 
+NAME 'grille' 
+TYPE vector 
+POINTS 
+0 0 
+0 1 
+1 1 
+1 0 
+0 0 
+-99 -99  
+0 0.75 
+1 0.75 
+-99 -99 
+0 0.5 
+1 0.5 
+-99 -99 
+0 0.25 
+1 0.25 
+END 
+end  
+SYMBOL 
+NAME 'regard' 
+TYPE ELLIPSE 
+POINTS 1 1 END 
+FILLED TRUE 
+END 
+LAYER 
+NAME "ortho-ia" group "ortho-ia" 
+STATUS on 
+PROJECTION 
+"+init=epsg:3949" 
+END 
+TYPE raster 
+TILEINDEX "/var/www/ortho/index.shp" 
+TILEITEM "location" 
+END 
+ 
+LAYER 
+CONNECTIONTYPE postgis 
+NAME "emplreserve" group "emplreserve" 
+CONNECTION "user=%user% password=%password% dbname=%dbname% host=%host%" 
+DATA "the_geom from geotest.emplreserve using unique the_geom" 
+STATUS on 
+PROJECTION 
+"+init=epsg:3949" 
+END 
+TYPE polygon 
+FILTER "code_insee like '%insee%%' or code_insee is null" 
+CLASS 
+STYLE 
+COLOR 224 147 30 
+OPACITY 50 
+END 
+END 
+END 
+ 
+LAYER 
+CONNECTIONTYPE postgis 
+NAME "Zone_non-aedificandi" group "Zone_non-aedificandi" 
+CONNECTION "user=%user% password=%password% dbname=%dbname% host=%host%" 
+DATA "the_geom from geotest.zononaedificandi using unique the_geom" 
+STATUS on 
+PROJECTION 
+"+init=epsg:3949" 
+END 
+TYPE polygon 
+FILTER "code_insee like '%insee%%' or code_insee is null" 
+CLASS 
+STYLE 
+COLOR 180 17 237 
+OPACITY 50 
+END 
+END 
+END 
+ 
+LAYER 
+CONNECTIONTYPE postgis 
+NAME "ppmh" group "ppmh" 
+CONNECTION "user=%user% password=%password% dbname=%dbname% host=%host%" 
+DATA "the_geom from geotest.ppmh using unique the_geom" 
+STATUS on 
+PROJECTION 
+"+init=epsg:3949" 
+END 
+TYPE polygon 
+FILTER "code_insee like '%insee%%' or code_insee is null" 
+CLASS 
+STYLE 
+COLOR 80 80 80 
+OPACITY 50 
+END 
+END 
+END 
+ 
+LAYER 
+CONNECTIONTYPE postgis 
+NAME "AUX" group "zonage" 
+CONNECTION "user=%user% password=%password% dbname=%dbname% host=%host%" 
+DATA "the_geom from geotest.zonage using unique the_geom" 
+STATUS on 
+PROJECTION 
+"+init=epsg:3949" 
+END 
+TYPE polygon 
+FILTER "code_insee like '%insee%%' or code_insee is null" 
+CLASS 
+EXPRESSION ('[zone]' eq 'AUX') 
+STYLE 
+COLOR 87 90 168 
+OPACITY 50 
+END 
+END 
+END 
+ 
+LAYER 
+CONNECTIONTYPE postgis 
+NAME "Nb" group "zonage" 
+CONNECTION "user=%user% password=%password% dbname=%dbname% host=%host%" 
+DATA "the_geom from geotest.zonage using unique the_geom" 
+STATUS on 
+PROJECTION 
+"+init=epsg:3949" 
+END 
+TYPE polygon 
+FILTER "code_insee like '%insee%%' or code_insee is null" 
+CLASS 
+EXPRESSION ('[zone]' eq 'Nb') 
+STYLE 
+COLOR 11 243 136 
+OPACITY 50 
+END 
+END 
+END 
+ 
+LAYER 
+CONNECTIONTYPE postgis 
+NAME "UY" group "zonage" 
+CONNECTION "user=%user% password=%password% dbname=%dbname% host=%host%" 
+DATA "the_geom from geotest.zonage using unique the_geom" 
+STATUS on 
+PROJECTION 
+"+init=epsg:3949" 
+END 
+TYPE polygon 
+FILTER "code_insee like '%insee%%' or code_insee is null" 
+CLASS 
+EXPRESSION ('[zone]' eq 'UY') 
+STYLE 
+COLOR 199 87 55 
+OPACITY 50 
+END 
+END 
+END 
+ 
+LAYER 
+CONNECTIONTYPE postgis 
+NAME "Ab" group "zonage" 
+CONNECTION "user=%user% password=%password% dbname=%dbname% host=%host%" 
+DATA "the_geom from geotest.zonage using unique the_geom" 
+STATUS on 
+PROJECTION 
+"+init=epsg:3949" 
+END 
+TYPE polygon 
+FILTER "code_insee like '%insee%%' or code_insee is null" 
+CLASS 
+EXPRESSION ('[zone]' eq 'Ab') 
+STYLE 
+COLOR 8 33 138 
+OPACITY 50 
+END 
+END 
+END 
+ 
+LAYER 
+CONNECTIONTYPE postgis 
+NAME "UB" group "zonage" 
+CONNECTION "user=%user% password=%password% dbname=%dbname% host=%host%" 
+DATA "the_geom from geotest.zonage using unique the_geom" 
+STATUS on 
+PROJECTION 
+"+init=epsg:3949" 
+END 
+TYPE polygon 
+FILTER "code_insee like '%insee%%' or code_insee is null" 
+CLASS 
+EXPRESSION ('[zone]' eq 'UB') 
+STYLE 
+COLOR 2 17 247 
+OPACITY 50 
+END 
+END 
+END 
+ 
+LAYER 
+CONNECTIONTYPE postgis 
+NAME "UBa" group "zonage" 
+CONNECTION "user=%user% password=%password% dbname=%dbname% host=%host%" 
+DATA "the_geom from geotest.zonage using unique the_geom" 
+STATUS on 
+PROJECTION 
+"+init=epsg:3949" 
+END 
+TYPE polygon 
+FILTER "code_insee like '%insee%%' or code_insee is null" 
+CLASS 
+EXPRESSION ('[zone]' eq 'UBa') 
+STYLE 
+COLOR 147 85 105 
+OPACITY 50 
+END 
+END 
+END 
+ 
+LAYER 
+CONNECTIONTYPE postgis 
+NAME "Aa" group "zonage" 
+CONNECTION "user=%user% password=%password% dbname=%dbname% host=%host%" 
+DATA "the_geom from geotest.zonage using unique the_geom" 
+STATUS on 
+PROJECTION 
+"+init=epsg:3949" 
+END 
+TYPE polygon 
+FILTER "code_insee like '%insee%%' or code_insee is null" 
+CLASS 
+EXPRESSION ('[zone]' eq 'Aa') 
+STYLE 
+COLOR 94 39 38 
+OPACITY 50 
+END 
+END 
+END 
+ 
+LAYER 
+CONNECTIONTYPE postgis 
+NAME "2AU" group "zonage" 
+CONNECTION "user=%user% password=%password% dbname=%dbname% host=%host%" 
+DATA "the_geom from geotest.zonage using unique the_geom" 
+STATUS on 
+PROJECTION 
+"+init=epsg:3949" 
+END 
+TYPE polygon 
+FILTER "code_insee like '%insee%%' or code_insee is null" 
+CLASS 
+EXPRESSION ('[zone]' eq '2AU') 
+STYLE 
+COLOR 130 139 182 
+OPACITY 50 
+END 
+END 
+END 
+ 
+LAYER 
+CONNECTIONTYPE postgis 
+NAME "UX" group "zonage" 
+CONNECTION "user=%user% password=%password% dbname=%dbname% host=%host%" 
+DATA "the_geom from geotest.zonage using unique the_geom" 
+STATUS on 
+PROJECTION 
+"+init=epsg:3949" 
+END 
+TYPE polygon 
+FILTER "code_insee like '%insee%%' or code_insee is null" 
+CLASS 
+EXPRESSION ('[zone]' eq 'UX') 
+STYLE 
+COLOR 70 209 252 
+OPACITY 50 
+END 
+END 
+END 
+ 
+LAYER 
+CONNECTIONTYPE postgis 
+NAME "UBb" group "zonage" 
+CONNECTION "user=%user% password=%password% dbname=%dbname% host=%host%" 
+DATA "the_geom from geotest.zonage using unique the_geom" 
+STATUS on 
+PROJECTION 
+"+init=epsg:3949" 
+END 
+TYPE polygon 
+FILTER "code_insee like '%insee%%' or code_insee is null" 
+CLASS 
+EXPRESSION ('[zone]' eq 'UBb') 
+STYLE 
+COLOR 73 112 51 
+OPACITY 50 
+END 
+END 
+END 
+ 
+LAYER 
+CONNECTIONTYPE postgis 
+NAME "1AU" group "zonage" 
+CONNECTION "user=%user% password=%password% dbname=%dbname% host=%host%" 
+DATA "the_geom from geotest.zonage using unique the_geom" 
+STATUS on 
+PROJECTION 
+"+init=epsg:3949" 
+END 
+TYPE polygon 
+FILTER "code_insee like '%insee%%' or code_insee is null" 
+CLASS 
+EXPRESSION ('[zone]' eq '1AU') 
+STYLE 
+COLOR 234 128 220 
+OPACITY 50 
+END 
+END 
+END 
+ 
+LAYER 
+CONNECTIONTYPE postgis 
+NAME "Na" group "zonage" 
+CONNECTION "user=%user% password=%password% dbname=%dbname% host=%host%" 
+DATA "the_geom from geotest.zonage using unique the_geom" 
+STATUS on 
+PROJECTION 
+"+init=epsg:3949" 
+END 
+TYPE polygon 
+FILTER "code_insee like '%insee%%' or code_insee is null" 
+CLASS 
+EXPRESSION ('[zone]' eq 'Na') 
+STYLE 
+COLOR 120 222 32 
+OPACITY 50 
+END 
+END 
+END 
+ 
+LAYER 
+CONNECTIONTYPE postgis 
+NAME "UAa" group "zonage" 
+CONNECTION "user=%user% password=%password% dbname=%dbname% host=%host%" 
+DATA "the_geom from geotest.zonage using unique the_geom" 
+STATUS on 
+PROJECTION 
+"+init=epsg:3949" 
+END 
+TYPE polygon 
+FILTER "code_insee like '%insee%%' or code_insee is null" 
+CLASS 
+EXPRESSION ('[zone]' eq 'UAa') 
+STYLE 
+COLOR 126 123 13 
+OPACITY 50 
+END 
+END 
+END 
+ 
+LAYER 
+CONNECTIONTYPE postgis 
+NAME "UAb" group "zonage" 
+CONNECTION "user=%user% password=%password% dbname=%dbname% host=%host%" 
+DATA "the_geom from geotest.zonage using unique the_geom" 
+STATUS on 
+PROJECTION 
+"+init=epsg:3949" 
+END 
+TYPE polygon 
+FILTER "code_insee like '%insee%%' or code_insee is null" 
+CLASS 
+EXPRESSION ('[zone]' eq 'UAb') 
+STYLE 
+COLOR 131 163 187 
+OPACITY 50 
+END 
+END 
+END 
+ 
+LAYER 
+CONNECTIONTYPE postgis 
+NAME "Bati_dur" group "batiments" 
+CONNECTION "user=%user% password=%password% dbname=%dbname% host=%host%" 
+DATA "the_geom from cadastre.batiment using unique the_geom" 
+STATUS on 
+PROJECTION 
+"+init=epsg:3949" 
+END 
+TYPE polygon 
+FILTER "code_insee like '%insee%%' or code_insee is null" 
+CLASS 
+EXPRESSION ('[constructi]' eq 'Bati dur') 
+STYLE 
+COLOR 146 45 6 
+END 
+END 
+END 
+ 
+LAYER 
+CONNECTIONTYPE postgis 
+NAME "Bati_leger" group "batiments" 
+CONNECTION "user=%user% password=%password% dbname=%dbname% host=%host%" 
+DATA "the_geom from cadastre.batiment using unique the_geom" 
+STATUS on 
+PROJECTION 
+"+init=epsg:3949" 
+END 
+TYPE polygon 
+FILTER "code_insee like '%insee%%' or code_insee is null" 
+CLASS 
+EXPRESSION ('[constructi]' eq 'Bati leger') 
+STYLE 
+COLOR 229 135 25 
+END 
+END 
+END 
+ 
+LAYER 
+CONNECTIONTYPE postgis 
+NAME "parcelles" group "parcelles" 
+CONNECTION "user=%user% password=%password% dbname=%dbname% host=%host%" 
+DATA "the_geom from cadastre.parcelle using unique the_geom" 
+STATUS on 
+PROJECTION 
+"+init=epsg:3949" 
+END 
+TYPE polygon 
+FILTER "code_insee like '%insee%%' or code_insee is null" 
+CLASS 
+STYLE 
+COLOR 119 138 117 
+OPACITY 20 
+END 
+STYLE 
+OUTLINECOLOR 174 174 177 
+END 
+END 
+END 
+ 
+LAYER 
+CONNECTIONTYPE postgis 
+NAME "nom_voie" group "nom_voie" 
+CONNECTION "user=%user% password=%password% dbname=%dbname% host=%host%" 
+DATA "the_geom from cadastre.nomvoie using unique the_geom" 
+STATUS on 
+PROJECTION 
+"+init=epsg:3949" 
+END 
+TYPE annotation 
+FILTER "code_insee like '%insee%%' or code_insee is null" 
+CLASS 
+text ([texte] [texte2] [texte3] [texte4] [texte5] [texte6] [texte7] [texte8] [texte9] [texte10]) 
+label 
+angle follow 
+type truetype 
+font "arial" 
+position cc 
+size 10 
+COLOR 0 0 0 
+END 
+END 
+END 
+ 
+LAYER 
+CONNECTIONTYPE postgis 
+NAME "cotation" group "cotation" 
+CONNECTION "user=%user% password=%password% dbname=%dbname% host=%host%" 
+DATA "the_geom FROM admin_svg.temp_cotation using unique the_geom" 
+STATUS on 
+PROJECTION 
+"+init=epsg:3949" 
+END 
+TYPE line 
+FILTER "session_temp like '%sess%'" 
+LABELITEM valeur 
+CLASS 
+EXPRESSION ('[type]' eq 'line') 
+LABEL 
+COLOR 255 0 0 
+ANGLE auto 
+TYPE truetype 
+ANTIALIAS true 
+FONT "arial" 
+POSITION uc 
+MINSIZE 10 
+MAXSIZE 15 
+END 
+OUTLINECOLOR  0 0 255 
+END 
+CLASS 
+EXPRESSION ('[type]' eq 'fleche') 
+OUTLINECOLOR 255 0 0 
+END 
+END 
+END

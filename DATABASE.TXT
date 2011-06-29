@@ -1,0 +1,567 @@
+--
+-- Table "profils". Stocke les profils utilisateurs pour faire le lien 
+-- avec les communes et applications par défaut.
+--
+
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = off;
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+SET escape_string_warning = off;
+
+SET search_path = admin_svg, pg_catalog;
+
+SET default_tablespace = '';
+
+SET default_with_oids = false;
+
+--
+-- Name: profils; Type: TABLE; Schema: admin_svg; Owner: sig; Tablespace: 
+--
+
+CREATE TABLE profils (
+    idprofils integer NOT NULL,
+    org character varying NOT NULL,
+    orgunit character varying,
+    insee character varying NOT NULL,
+    appli character varying NOT NULL
+);
+
+
+ALTER TABLE admin_svg.profils OWNER TO sig;
+
+--
+-- Name: proftest_idtestprof_seq; Type: SEQUENCE; Schema: admin_svg; Owner: sig
+--
+
+CREATE SEQUENCE proftest_idtestprof_seq
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
+    CACHE 1;
+
+
+ALTER TABLE admin_svg.proftest_idtestprof_seq OWNER TO sig;
+
+--
+-- Name: proftest_idtestprof_seq; Type: SEQUENCE OWNED BY; Schema: admin_svg; Owner: sig
+--
+
+ALTER SEQUENCE proftest_idtestprof_seq OWNED BY profils.idprofils;
+
+
+--
+-- Name: proftest_idtestprof_seq; Type: SEQUENCE SET; Schema: admin_svg; Owner: sig
+--
+
+SELECT pg_catalog.setval('proftest_idtestprof_seq', 3, true);
+
+
+--
+-- Name: idprofils; Type: DEFAULT; Schema: admin_svg; Owner: sig
+--
+
+ALTER TABLE profils ALTER COLUMN idprofils SET DEFAULT nextval('proftest_idtestprof_seq'::regclass);
+
+
+--
+-- Data for Name: profils; Type: TABLE DATA; Schema: admin_svg; Owner: sig
+--
+
+INSERT INTO profils VALUES (1, 'Pays de l''Ourcq', NULL, '770000', '2');
+INSERT INTO profils VALUES (3, 'Mairie de Congis', NULL, '770126', '2');
+INSERT INTO profils VALUES (2, 'Pays de l''Ourcq', 'SIG', '770126', '2');
+
+
+--
+-- Name: proftest_pkey; Type: CONSTRAINT; Schema: admin_svg; Owner: sig; Tablespace: 
+--
+
+ALTER TABLE ONLY profils
+    ADD CONSTRAINT proftest_pkey PRIMARY KEY (idprofils);
+
+
+--
+-- FIN Table "profils"
+--
+
+
+--
+-- Table "role". Permet d'associer un nom "lisible" au code du rôle,
+-- ainsi que de spécifier le DN LDAP associé si besoin.
+--
+
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = off;
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+SET escape_string_warning = off;
+
+SET search_path = admin_svg, pg_catalog;
+
+SET default_tablespace = '';
+
+SET default_with_oids = false;
+
+--
+-- Name: role; Type: TABLE; Schema: admin_svg; Owner: sig; Tablespace: 
+--
+
+CREATE TABLE "role" (
+    "ID" integer NOT NULL,
+    nom character varying NOT NULL,
+    ldap_dn character varying
+);
+
+
+ALTER TABLE admin_svg."role" OWNER TO sig;
+
+--
+-- Name: role_ID_seq; Type: SEQUENCE; Schema: admin_svg; Owner: sig
+--
+
+CREATE SEQUENCE "role_ID_seq"
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
+    CACHE 1;
+
+
+ALTER TABLE admin_svg."role_ID_seq" OWNER TO sig;
+
+--
+-- Name: role_ID_seq; Type: SEQUENCE OWNED BY; Schema: admin_svg; Owner: sig
+--
+
+ALTER SEQUENCE "role_ID_seq" OWNED BY "role"."ID";
+
+
+--
+-- Name: role_ID_seq; Type: SEQUENCE SET; Schema: admin_svg; Owner: sig
+--
+
+SELECT pg_catalog.setval('"role_ID_seq"', 2, true);
+
+
+--
+-- Name: ID; Type: DEFAULT; Schema: admin_svg; Owner: sig
+--
+
+ALTER TABLE "role" ALTER COLUMN "ID" SET DEFAULT nextval('"role_ID_seq"'::regclass);
+
+
+--
+-- Data for Name: role; Type: TABLE DATA; Schema: admin_svg; Owner: sig
+--
+
+INSERT INTO "role" VALUES (2, 'Agents CCPO', NULL);
+INSERT INTO "role" VALUES (1, 'Administrateurs', 'cn=admins,ou=groups,dc=paysdelourcq,dc=fr');
+
+
+--
+-- Name: role_nom_key; Type: CONSTRAINT; Schema: admin_svg; Owner: sig; Tablespace: 
+--
+
+ALTER TABLE ONLY "role"
+    ADD CONSTRAINT role_nom_key UNIQUE (nom);
+
+
+--
+-- Name: role_pkey; Type: CONSTRAINT; Schema: admin_svg; Owner: sig; Tablespace: 
+--
+
+ALTER TABLE ONLY "role"
+    ADD CONSTRAINT role_pkey PRIMARY KEY ("ID");
+
+
+--
+-- Fin Table "role"
+--
+
+
+
+--
+-- Table "roleaction". Permet de faire le lien entre un role et
+-- une "action". Celles-ci sont définies dans /inc et pourraient
+-- - à terme - être définies automatiquement par les applis.
+--
+
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = off;
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+SET escape_string_warning = off;
+
+SET search_path = admin_svg, pg_catalog;
+
+SET default_tablespace = '';
+
+SET default_with_oids = false;
+
+--
+-- Name: roleaction; Type: TABLE; Schema: admin_svg; Owner: sig; Tablespace: 
+--
+
+CREATE TABLE roleaction (
+    idroleaction integer NOT NULL,
+    idaction integer NOT NULL,
+    idrole integer NOT NULL
+);
+
+
+ALTER TABLE admin_svg.roleaction OWNER TO sig;
+
+--
+-- Name: roleaction_idroleaction_seq; Type: SEQUENCE; Schema: admin_svg; Owner: sig
+--
+
+CREATE SEQUENCE roleaction_idroleaction_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
+    CACHE 1;
+
+
+ALTER TABLE admin_svg.roleaction_idroleaction_seq OWNER TO sig;
+
+--
+-- Name: roleaction_idroleaction_seq; Type: SEQUENCE OWNED BY; Schema: admin_svg; Owner: sig
+--
+
+ALTER SEQUENCE roleaction_idroleaction_seq OWNED BY roleaction.idroleaction;
+
+
+--
+-- Name: roleaction_idroleaction_seq; Type: SEQUENCE SET; Schema: admin_svg; Owner: sig
+--
+
+SELECT pg_catalog.setval('roleaction_idroleaction_seq', 1, false);
+
+
+--
+-- Name: idroleaction; Type: DEFAULT; Schema: admin_svg; Owner: sig
+--
+
+ALTER TABLE roleaction ALTER COLUMN idroleaction SET DEFAULT nextval('roleaction_idroleaction_seq'::regclass);
+
+
+--
+-- Data for Name: roleaction; Type: TABLE DATA; Schema: admin_svg; Owner: sig
+--
+
+
+
+--
+-- Name: roleaction_pkey; Type: CONSTRAINT; Schema: admin_svg; Owner: sig; Tablespace: 
+--
+
+ALTER TABLE ONLY roleaction
+    ADD CONSTRAINT roleaction_pkey PRIMARY KEY (idroleaction);
+
+
+--
+-- Name: roleaction_action_idx; Type: INDEX; Schema: admin_svg; Owner: sig; Tablespace: 
+--
+
+CREATE INDEX roleaction_action_idx ON roleaction USING btree (idaction);
+
+
+--
+-- Name: roleaction_role_idx; Type: INDEX; Schema: admin_svg; Owner: sig; Tablespace: 
+--
+
+CREATE INDEX roleaction_role_idx ON roleaction USING btree (idrole);
+
+
+--
+-- Fin Table "roleaction"
+--
+
+
+--
+-- Table "roleappli". Permet de faire le lien entre un rôle
+-- et une application. Normalement, les profils font appel
+-- à cette table pour déterminer si un utilisateur donné
+-- peut ou non faire appel à une application.
+--
+
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = off;
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+SET escape_string_warning = off;
+
+SET search_path = admin_svg, pg_catalog;
+
+SET default_tablespace = '';
+
+SET default_with_oids = false;
+
+--
+-- Name: roleappli; Type: TABLE; Schema: admin_svg; Owner: sig; Tablespace: 
+--
+
+CREATE TABLE roleappli (
+    idroleappli integer NOT NULL,
+    idapplication integer NOT NULL,
+    idrole integer NOT NULL
+);
+
+
+ALTER TABLE admin_svg.roleappli OWNER TO sig;
+
+--
+-- Name: roleappli_idroleappli_seq; Type: SEQUENCE; Schema: admin_svg; Owner: sig
+--
+
+CREATE SEQUENCE roleappli_idroleappli_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
+    CACHE 1;
+
+
+ALTER TABLE admin_svg.roleappli_idroleappli_seq OWNER TO sig;
+
+--
+-- Name: roleappli_idroleappli_seq; Type: SEQUENCE OWNED BY; Schema: admin_svg; Owner: sig
+--
+
+ALTER SEQUENCE roleappli_idroleappli_seq OWNED BY roleappli.idroleappli;
+
+
+--
+-- Name: roleappli_idroleappli_seq; Type: SEQUENCE SET; Schema: admin_svg; Owner: sig
+--
+
+SELECT pg_catalog.setval('roleappli_idroleappli_seq', 1, false);
+
+
+--
+-- Name: idroleappli; Type: DEFAULT; Schema: admin_svg; Owner: sig
+--
+
+ALTER TABLE roleappli ALTER COLUMN idroleappli SET DEFAULT nextval('roleappli_idroleappli_seq'::regclass);
+
+
+--
+-- Data for Name: roleappli; Type: TABLE DATA; Schema: admin_svg; Owner: sig
+--
+
+
+
+--
+-- Name: roleappli_pkey; Type: CONSTRAINT; Schema: admin_svg; Owner: sig; Tablespace: 
+--
+
+ALTER TABLE ONLY roleappli
+    ADD CONSTRAINT roleappli_pkey PRIMARY KEY (idroleappli);
+
+
+--
+-- Name: roleappli_application_idx; Type: INDEX; Schema: admin_svg; Owner: sig; Tablespace: 
+--
+
+CREATE INDEX roleappli_application_idx ON roleappli USING btree (idapplication);
+
+
+--
+-- Name: roleappli_role_idx; Type: INDEX; Schema: admin_svg; Owner: sig; Tablespace: 
+--
+
+CREATE INDEX roleappli_role_idx ON roleappli USING btree (idrole);
+
+
+--
+-- Fin Table "roleappli"
+--
+
+
+
+
+--
+-- Table "rolecommune". Même principe que pour "roleappli", mais
+-- par rapport aux communes.
+--
+
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = off;
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+SET escape_string_warning = off;
+
+SET search_path = admin_svg, pg_catalog;
+
+SET default_tablespace = '';
+
+SET default_with_oids = false;
+
+--
+-- Name: rolecommune; Type: TABLE; Schema: admin_svg; Owner: sig; Tablespace: 
+--
+
+CREATE TABLE rolecommune (
+    idrolecommune integer NOT NULL,
+    idcommune character varying(6) NOT NULL,
+    idrole integer NOT NULL
+);
+
+
+ALTER TABLE admin_svg.rolecommune OWNER TO sig;
+
+--
+-- Name: rolecommune_idrolecommune_seq; Type: SEQUENCE; Schema: admin_svg; Owner: sig
+--
+
+CREATE SEQUENCE rolecommune_idrolecommune_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
+    CACHE 1;
+
+
+ALTER TABLE admin_svg.rolecommune_idrolecommune_seq OWNER TO sig;
+
+--
+-- Name: rolecommune_idrolecommune_seq; Type: SEQUENCE OWNED BY; Schema: admin_svg; Owner: sig
+--
+
+ALTER SEQUENCE rolecommune_idrolecommune_seq OWNED BY rolecommune.idrolecommune;
+
+
+--
+-- Name: rolecommune_idrolecommune_seq; Type: SEQUENCE SET; Schema: admin_svg; Owner: sig
+--
+
+SELECT pg_catalog.setval('rolecommune_idrolecommune_seq', 1, false);
+
+
+--
+-- Name: idrolecommune; Type: DEFAULT; Schema: admin_svg; Owner: sig
+--
+
+ALTER TABLE rolecommune ALTER COLUMN idrolecommune SET DEFAULT nextval('rolecommune_idrolecommune_seq'::regclass);
+
+
+--
+-- Data for Name: rolecommune; Type: TABLE DATA; Schema: admin_svg; Owner: sig
+--
+
+
+
+--
+-- Name: rolecommune_pkey; Type: CONSTRAINT; Schema: admin_svg; Owner: sig; Tablespace: 
+--
+
+ALTER TABLE ONLY rolecommune
+    ADD CONSTRAINT rolecommune_pkey PRIMARY KEY (idrolecommune);
+
+
+--
+-- Name: rolecommune_commune_idx; Type: INDEX; Schema: admin_svg; Owner: sig; Tablespace: 
+--
+
+CREATE INDEX rolecommune_commune_idx ON rolecommune USING btree (idcommune);
+
+
+--
+-- Name: rolecommune_role_idx; Type: INDEX; Schema: admin_svg; Owner: sig; Tablespace: 
+--
+
+CREATE INDEX rolecommune_role_idx ON rolecommune USING btree (idrole);
+
+
+--
+-- Fin Table "rolecommune"
+--
+
+--
+-- Table "roleuti". Fait le lien entre les utilisateurs tels que
+-- définis dans l'actuel schéma GISMEAUX (via un login littéral)
+-- et les rôles.
+-- Dans le cas d'une authentification SSL, la table "utilisateur"
+-- peut ne pas être lue, et "idutilisateur" correspondrait 
+-- directement au "CN" du certificat (idem en LDAP, logiquement).
+--
+
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = off;
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+SET escape_string_warning = off;
+
+SET search_path = admin_svg, pg_catalog;
+
+SET default_tablespace = '';
+
+SET default_with_oids = false;
+
+--
+-- Name: roleuti; Type: TABLE; Schema: admin_svg; Owner: sig; Tablespace: 
+--
+
+CREATE TABLE roleuti (
+    idroleuti integer NOT NULL,
+    idrole integer NOT NULL,
+    idutilisateur character varying NOT NULL
+);
+
+
+ALTER TABLE admin_svg.roleuti OWNER TO sig;
+
+--
+-- Name: roleuti_idroleuti_seq; Type: SEQUENCE; Schema: admin_svg; Owner: sig
+--
+
+CREATE SEQUENCE roleuti_idroleuti_seq
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
+    CACHE 1;
+
+
+ALTER TABLE admin_svg.roleuti_idroleuti_seq OWNER TO sig;
+
+--
+-- Name: roleuti_idroleuti_seq; Type: SEQUENCE OWNED BY; Schema: admin_svg; Owner: sig
+--
+
+ALTER SEQUENCE roleuti_idroleuti_seq OWNED BY roleuti.idroleuti;
+
+
+--
+-- Name: roleuti_idroleuti_seq; Type: SEQUENCE SET; Schema: admin_svg; Owner: sig
+--
+
+SELECT pg_catalog.setval('roleuti_idroleuti_seq', 1, true);
+
+
+--
+-- Name: idroleuti; Type: DEFAULT; Schema: admin_svg; Owner: sig
+--
+
+ALTER TABLE roleuti ALTER COLUMN idroleuti SET DEFAULT nextval('roleuti_idroleuti_seq'::regclass);
+
+
+--
+-- Data for Name: roleuti; Type: TABLE DATA; Schema: admin_svg; Owner: sig
+--
+
+INSERT INTO roleuti VALUES (1, 1, 'Olivier Migeot');
+
+
+--
+-- Name: roleuti_pkey; Type: CONSTRAINT; Schema: admin_svg; Owner: sig; Tablespace: 
+--
+
+ALTER TABLE ONLY roleuti
+    ADD CONSTRAINT roleuti_pkey PRIMARY KEY (idroleuti);
+
+
+--
+-- Fin Table "roleuti"
+--
+

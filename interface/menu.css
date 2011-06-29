@@ -1,0 +1,334 @@
+ @charset "utf-8";
+/* CSS Document */
+
+
+/*^'^ Navigation Structure ^'^*/
+.nav-container-outer{
+	/*background: #990000;*/
+/*background-color: #759bda;*/	/*couleur menu principale*/
+padding: 0px;
+height:20px;
+border-bottom: 1px solid #D7D7D7;
+/*background-image: url(images/nav-bg2.jpg);*/
+}
+.float-left{
+float: left;
+}
+.float-right{
+float: right;
+}
+.nav-container .divider{
+display:block;
+font-size:1px;
+border-width:0px;
+border-style:solid;
+}
+.nav-container .divider-vert{
+float:left;
+width:0px;
+display: none;
+}
+.nav-container .item-secondary-title{
+display:block;
+cursor:default;
+white-space:nowrap;
+}
+.clear{
+font-size:1px;
+height:0px;
+width:0px;
+clear:left;
+line-height:0px;
+display:block;
+float:none;
+}
+.nav-container{
+z-index:300;
+	/*position:relative;*/
+	/*zoom:1;
+	margin: 0 auto;*/
+}
+.nav-container a, .nav-container li{
+float:left;
+display:block;
+white-space:nowrap;
+}
+.nav-container div a, .nav-container ul a, .nav-container ul li{
+float:none;
+}
+.nav-container ul{
+left:-10000px;
+position:absolute;
+}
+.nav-container, .nav-container ul{
+list-style:none;
+padding:0px;
+margin:0px;
+}
+.nav-container li a{
+float:none
+}
+.nav-container li{
+position:relative;
+}
+.nav-container ul{
+z-index:310;
+}
+.nav-container ul ul{
+z-index:320;
+}
+.nav-container ul ul ul{
+z-index:330;
+}
+.nav-container ul ul ul ul{
+z-index:340;
+}
+.nav-container ul ul ul ul ul{
+z-index:350;
+}
+li:hover>ul{
+left:auto;
+}
+#nav-container ul {
+top:100%;
+}
+#nav-container ul li:hover>ul{
+top:0px;
+left:100%;
+}
+
+/*^'^ Primary Items ^'^*/	
+#nav-container a{	
+padding:0px 6px 0px 7px;
+margin: 0px 0px 0px 0px;
+/*color: #FFFFFF;*/
+
+color:rgb(0,0,128);
+font-family: Trebuchet MS, Arial, sans-serif, Helvetica;
+font-size:12px;
+text-decoration:none;
+font-weight: bold;
+
+/*background: url(images/item-primary-bg2.gif);*/
+background-repeat: no-repeat;
+background-position: top;
+}
+
+#nav-container a:hover{
+color: #6C3600;
+/*background: url(images/item-primary-bg2.gif);*/
+background-repeat: no-repeat;
+}
+
+/*^'^ Secondary Items Container ^'^*/	
+#nav-container div, #nav-container ul{	
+padding:10px 4px 10px 4px;
+/*margin:0px 0px 0px 0px;*/
+/*background: url(images/item-secondary-container-bg1.png);*/
+background-repeat: repeat-x;
+background-color:rgb(185,200,215);
+border:1px groove #000080;
+border-top:none;
+border-left:none;
+/*border-top:1px groove #ffffff;*/
+/*border-right:1px groove #000080;
+border-bottom: 1px solid rgb(185,200,215);*/
+
+}
+
+/*^'^ Secondary Items ^'^*/	
+#nav-container div a, #nav-container ul a{	
+padding:3px 10px 3px 6px;
+/*background-color: #FFFFFF;*/
+background-color:rgb(185,200,215);
+/*background: url(images/item-secondary-bg1.jpg);*/
+background-repeat: no-repeat;
+background-position: 0px 22px;
+font-size:10px;
+border-width:0px;
+border-style:none;
+/*margin: 0px 0px 0px 0px;*/
+width: 133px;
+}
+
+/*^'^ Secondary Items Hover State ^'^*/	
+#nav-container div a:hover, #nav-container ul a:hover{	
+background-color: #FFFFFF;
+/*background: url(images/item-secondary-bg1.jpg);*/
+background-repeat: no-repeat;
+color:#CC0000;
+}
+
+/*^'^ Secondary Item Titles ^'^*/	
+#nav-container .item-secondary-title{	
+cursor:default;
+padding:4px 0px 3px 7px;
+color: #6C3600;
+font-family: Arial, Trebuchet MS, Arial, sans-serif, Helvetica;
+font-size:11px;
+/* background: url(images/item-secondary-title-bg.jpg); */
+background-repeat: no-repeat;
+font-weight:bold;
+}
+
+/*^'^ Horizontal Dividers ^'^*/	
+#nav-container .divider-horiz{	
+border-top-width:1px;
+/*margin:5px 5px;*/
+border-color:#d7d7d7;
+}
+
+/*^'^ Vertical Dividers ^'^*/	
+#nav-container .divider-vert{	
+border-left-width:1px;
+height:15px;
+/*margin:4px 2px 0px 2px;*/
+border-color:#AAAAAA;
+}
+
+
+
+
+    body {
+	font-size:14px;
+	color:#008;
+	height:100%;
+	width:100%;
+	overflow:hidden;
+	position: absolute;
+	-moz-user-select:none;
+    }
+	tr {cellspacing:0;cellpadding:0;border:0;}
+	
+  
+   div#boiteoutils_office {
+	position:absolute;
+	/*height:auto;*/
+	/*background-color:rgb(235,228,225);*/ 	
+      	-moz-border-radius: 0px;
+		-webkit-border-radius: 0px;
+	/*border: 1px solid #008;*/
+	padding-top:0px;
+	padding-left:0px;
+	font-size:2px;
+	left: 550px;
+	top: 30px;
+	
+      }
+	  
+	  /*taille des colonnes de la boite d'icones*/
+	  div#outils_office td{
+	  height:32px;
+	  width:32px;
+	  	   
+	  }
+	  /*taille des icones*/
+	  div#outils_office img{
+	  height:30px;
+	  width:30px;
+	  	   
+	  }
+	  div#boiteoutils {
+	position:absolute;
+	/*height:auto;*/
+	/*background-color:rgb(235,228,225);*/ 	
+      	-moz-border-radius: 0px;
+		-webkit-border-radius: 0px;
+	/*border: 1px solid #008;*/
+	padding-top:0px;
+	padding-left:0px;
+	font-size:2px;
+	left: 0px;
+	top: 0px;
+	
+      }
+	  
+	  /*taille des colonnes de la boite d'icones*/
+	  div#outils td{
+	  height:32px;
+	  width:32px;
+	  	   
+	  }
+	  /*taille des icones*/
+	  div#outils img{
+	  height:30px;
+	  width:30px;
+	  	   
+	  }
+	  /*couleur de survol des icones*/
+	 /* div#outils td:hover{
+	  background-color:#ccc;	   
+	  }
+	  
+	  div#outils td:click{
+	  background-color:#f00;	   
+	  }*/
+	  /*supression de la couleur de survol des icones*/
+	 /* div#outils td:visited{
+	  background-color:none;	   
+	  }*/
+	 
+	 /* positionnement par dfaut de la boite d'icones*/
+	  div#outils {
+	  top:29px;left:140px;position:absolute;z-index:1; width:320px;height:40px;
+	  }
+/*	  div#titreoutils {
+	width: 100px;
+	height: 25px;
+	background-color: #dff0ff;
+	-moz-border-radius-topleft: 15px;
+	-webkit-border-radius: 10px; 
+	border-left: 1px solid #008;
+	border-top: 1px solid #008;
+	border-right: 1px solid #008;
+	padding: 0px; margin-left:105px;
+      }
+	
+	div#curseur {
+	background-color: #dff0ff;
+	border: 1px solid #008;
+	 }
+	div#barre {
+	background-color:#008;
+	
+		 }
+	div#zoom_moin {
+	background-color:#008;
+	color:#dff0ff;
+		 }
+	div#zoom_plu {
+	background-color:#008;
+	color:#dff0ff;
+		 }*/	 
+	div#conteneur{
+	
+		 }
+		 	 	 	 
+div#contenu_legende {
+		position:absolute;
+      	width: 195px;
+      	height:400px;
+		background-color: #ffffff;
+      	overflow:auto;
+      	position:absolute;
+		top:25px;
+		left:5px;
+		border: 1px solid #008;
+		padding-top:10px;
+		/*padding-left:5px;*/
+		/*-moz-border-radius: 0px;
+		-webkit-border-radius: 5px;*/
+      }
+	  div#titrelegende {
+	width: 100px;
+	height: 25px;
+	background-color: #dff0ff;
+	position:absolute;
+	/*-moz-border-radius-topleft: 15px;
+	-webkit-border-radius: 10px*/;
+	 
+	border-left: 1px solid #008;
+	border-top: 1px solid #008;
+	border-right: 1px solid #008;
+	padding: 0px; left:100px;
+      }

@@ -1,0 +1,134 @@
+#ENTETE#
+MAP
+NAME tt
+STATUS on
+SIZE 302 254
+UNITS meters
+IMAGECOLOR 254 253 252
+FONTSET"fonts/fontset.txt"
+IMAGETYPE jpeg
+#EXTENT 625000 129000 656000 153382
+#DEBUT_DIALOGUE#
+PROJECTION
+   "+init=epsg:3949"
+END 
+WEB
+	TEMPLATE capm_svg.php
+	#MINSCALE 200
+	#MAXSCALE 8000
+	IMAGEPATH "../interface/communes/"
+	IMAGEURL "/tmp"
+END
+
+
+LAYER
+	CONNECTIONTYPE postgis
+	NAME "commune" group "commune"
+	CONNECTION "user=%user% password=%password% dbname=%dbname% host=%host%"
+	DATA "the_geom from admin_svg.commune using unique the_geom"
+	STATUS on
+	TYPE POLYGON
+	PROJECTION
+   "init=IGNF:LAMB1"
+	END  
+	FILTER "idcommune like '%insee%%'"
+    CLASS
+		COLOR 228 254 225
+		OUTLINECOLOR 255 0 0
+	END
+END
+LAYER
+	CONNECTIONTYPE postgis
+	NAME "batiment" group "batiment"
+	CONNECTION "user=%user% password=%password% dbname=%dbname% host=%host%"
+	DATA "the_geom from cadastre.batiment using unique the_geom"
+	STATUS on
+	TYPE POLYGON
+	PROJECTION
+   "+init=epsg:3949"
+	END 
+	FILTER "code_insee like '%insee%%'"
+    CLASS
+		COLOR 184 84 149
+	END
+END
+LAYER
+	CONNECTIONTYPE postgis
+	NAME "bati" group "bati"
+	CONNECTION "user=%user% password=%password% dbname=%dbname% host=%host%"
+	DATA "the_geom from bd_topo.batiment using unique the_geom"
+	STATUS on
+	TYPE POLYGON
+	PROJECTION
+   "+init=epsg:3949"
+	END 
+	   CLASS
+		COLOR 184 84 149
+	END
+END
+LAYER
+	CONNECTIONTYPE postgis
+	NAME "surface_eau" group "surface_eau"
+	CONNECTION "user=%user% password=%password% dbname=%dbname% host=%host%"
+	DATA "the_geom from bd_topo.surface_eau using unique the_geom"
+	STATUS on
+	TYPE POLYGON
+	PROJECTION
+   "+init=epsg:3949"
+	END 
+    CLASS
+		COLOR 0 0 255
+	END
+END
+LAYER
+	CONNECTIONTYPE postgis
+	NAME "troncon_route" group "troncon_route"
+	CONNECTION "user=%user% password=%password% dbname=%dbname% host=%host%"
+	DATA "the_geom from bd_topo.troncon_route using unique the_geom"
+	STATUS on
+	TYPE line
+	PROJECTION
+   "+init=epsg:3949"
+	END 
+    CLASS
+		EXPRESSION ('[nature]' eq 'Principale')
+		COLOR 0 0 0
+		OUTLINECOLOR 0 0 0
+	END
+END
+
+LAYER
+	CONNECTIONTYPE postgis
+	NAME "parcelle" group "parcelle"
+	CONNECTION "user=%user% password=%password% dbname=%dbname% host=%host%"
+	DATA "the_geom from cadastre.parcelle using unique the_geom"
+	STATUS on
+	TYPE POLYGON
+	PROJECTION
+   "+init=epsg:3949"
+	END 
+    FILTER "code_insee like '%insee%%'"
+	CLASS
+		COLOR 255 128 0
+		OUTLINECOLOR 0 0 0
+	END
+	TRANSPARENCY 5
+END
+#couche contour parcelle
+LAYER
+  CONNECTIONTYPE postgis
+  NAME "parcelle" group "parcelle"
+  CONNECTION "user=%user% password=%password% dbname=%dbname% host=%host%"
+  DATA "the_geom FROM cadastre.parcelle using unique the_geom"
+  STATUS on
+  TYPE polygon
+  PROJECTION
+   "+init=epsg:3949"
+	END 
+  FILTER "code_insee like '%insee%%'"
+   CLASS
+     OUTLINECOLOR  0 0 0
+  END
+END
+
+END

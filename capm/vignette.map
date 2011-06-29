@@ -1,0 +1,105 @@
+#ENTETE#
+MAP
+NAME tt
+STATUS on
+SIZE 302 254
+UNITS meters
+IMAGECOLOR 254 253 252
+FONTSET"fonts/fontset.txt"
+IMAGETYPE jpeg
+#SHAPEPATH /sig/bdtopo/
+
+OUTPUTFORMAT
+NAME 'AGG'
+DRIVER AGG/jpeg
+IMAGEMODE RGB
+END
+
+#EXTENT 625000 129000 656000 153382
+#DEBUT_DIALOGUE#
+PROJECTION
+   "+init=epsg:3949"
+END 
+WEB
+	TEMPLATE capm_svg.php
+	#MINSCALE 200
+	#MAXSCALE 8000
+	IMAGEPATH "../interface/communes/"
+	IMAGEURL "/tmp"
+END
+
+LAYER
+        NAME "vegetation" group "vegetation"
+        TYPE POLYGON
+        CONNECTIONTYPE OGR
+        CONNECTION "/sig/bdtopo/ZONE_VEGETATION.SHP"
+        STATUS on
+        PROJECTION
+   "+init=epsg:2154"
+        END
+    CLASS
+                COLOR 159 227 163
+        END
+END
+
+LAYER
+	NAME "surface_eau" group "surface_eau"
+	TYPE POLYGON
+	CONNECTIONTYPE OGR
+	CONNECTION "/sig/bdtopo/SURFACE_EAU.SHP"
+	STATUS ON 
+	PROJECTION
+   "+init=epsg:2154"
+	END 
+    CLASS
+		STYLE
+			COLOR 170 181 240 
+			OUTLINECOLOR 170 181 240
+			WIDTH 2.0
+		END
+	END
+END
+
+
+LAYER
+        CONNECTIONTYPE postgis
+        NAME "batiment" group "batiment"
+        CONNECTION "user=%user% password=%password% dbname=%dbname% host=%host%"
+        DATA "the_geom from cadastre.batiment using unique the_geom"
+        STATUS on
+        TYPE POLYGON
+        PROJECTION
+   "+init=epsg:3949"
+        END
+        FILTER "code_insee like '%insee%%'"
+        CLASS
+                STYLE
+                        COLOR 209 166 109
+                        OUTLINECOLOR 209 166 109
+                        WIDTH 3.0
+                END
+        END
+END
+
+LAYER
+        CONNECTIONTYPE postgis
+        NAME "commune" group "commune"
+        CONNECTION "user=%user% password=%password% dbname=%dbname% host=%host%"
+        DATA "the_geom from admin_svg.commune using unique the_geom"
+        STATUS on
+        TYPE POLYGON
+        PROJECTION
+   "+init=epsg:3949"
+        END
+        FILTER "idcommune like '%insee%%'"
+	CLASS
+		STYLE
+			OUTLINECOLOR 255 0 0
+			WIDTH 1.5 
+		END
+	END
+END
+
+
+
+END

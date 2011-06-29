@@ -1,0 +1,19 @@
+.defaut {font-family:Arial;font-size:10px;opacity:1;fill:white;fill-opacity:1;stroke:#008;stroke-width:1;stroke-opacity:1}
+
+.boutonvierge {fill:#dff0ff;}
+
+.contourmap {fill:none;pointer-events:none;stroke:#008;stroke-width:0.3;}
+.cadre {fill:#dff0ff;opacity:0.6;pointer-events:none;stroke:#008;stroke-width:0.3;}
+.survol {fill:#008;}
+.horssurvol {fill:none;}
+.textcardi {fill:white;}
+.coulfonce {stop-color:#008;}/*bleu fonce*/
+.coulclair {stop-color:#dff0ff;}/*bleu clair*/
+.coulblanc {stop-color:white}
+.coulselzoom {stop-color:red} /*couleur de select du niveau zoom*/
+
+
+.fillfonce {fill:#008}
+.fillclair {fill:#dff0ff}/*bleu clair*/
+
+text {stroke:none;}
