@@ -584,6 +584,112 @@ $res1 = pg_query($DB->con,"select application.libelle_appli,apputi.droit from ad
 
 }
 
+////////////////////////////////////////////
+
+class SSOIntranetProfile extends Profile {
+  var $user;
+
+  function __construct($appli='')
+  {
+    parent::__construct("ssointranet");
+    $this->appli = 1;
+  }
+
+  function getUserName()
+  {
+    return $this->user;
+  }
+
+  function ok($insee="",$appli="",$action="")
+  {
+   return 1;
+  }
+
+  function is_identified()
+  {
+    
+    global $DB;
+
+    $this->user = $_SERVER['HTTP_AUTH_USER'];
+
+
+    $this->insee = $_SERVER['HTTP_AUTH_INSEE'];
+
+    $apps = $_SERVER['HTTP_AUTH_APPLIS'];
+
+    preg_match_all("/([^:]+):([^:]+)/", $apps, $pairs);
+    $this->liste_appli = $pairs[1];
+    $this->appli_droit = $pairs[2];
+    $this->acces_ssl = true;
+    $this->protocol = 'https'; 
+ 
+    $this->roles[] = 2;
+    if (strpos($_SERVER['HTTP_AUTH_ROLES'],'sig_admin'))
+    {
+	$this->droit = 'AD';
+        $this->roles[] = 1;
+    }
+    else
+	$this->droit = '';
+
+    $res = $DB->tab_result("SELECT * FROM admin_svg.utilisateur WHERE login = '".$this->user."';");
+    if (count($res) == 0)
+    {
+       // CREATE USER :)
+	$q = "INSERT INTO admin_svg.utilisateur (idutilisateur,idcommune,login,droit,nom,prenom,email) VALUES (";
+	$q .= "nextval('admin_svg.util'), ";
+	$q .= "'" . $this->insee . "',";
+	$q .= "'" . $this->user . "',";
+	$q .= "'" . $this->droit . "',";
+	$q .= "'" . "UnNom" . "',"; 
+	$q .= "'" . "UnPrenom" . "',";
+	$q .= "'" . "UnMail" . "');";
+	$res = $DB->tab_result($q);
+    }
+    $res = $DB->tab_result("SELECT idutilisateur FROM admin_svg.utilisateur WHERE login = '".$this->user."';");
+    $this->idutilisateur = $res[0][0];
+
+    // (REMOVE AND) ADD APPS
+
+    $res = $DB->tab_result("SELECT idapplication,libelle_appli FROM admin_svg.application");
+    $apps = Array();
+    foreach ($res as $r)
+    {
+      $apps[$r[1]] = $r[0];
+    }
+    $res = $DB->tab_result("DELETE FROM admin_svg.apputi WHERE idutilisateur = " . $this->idutilisateur );
+    $i = 0;
+    $this->appli = $apps[$this->liste_appli[0]];
+    foreach ($this->liste_appli as $app) 
+    {
+	$q  = "INSERT INTO admin_svg.apputi (idutilisateur,idapplication,droit,ordre) VALUES (";
+	$q .= $this->idutilisateur . ",";
+	$q .= $apps[$app] . ",";
+	$q .= "'" . $this->appli_droit[$i] . "',";
+	$q .= $i . ")";
+        $i += 1;
+	$res = $DB->tab_result($q);
+    }
+    return 1;
+  }
+
+  function is_authentified()
+  {
+        return 1;
+  }
+
+
+  function matches()
+  { 
+    if ($_SERVER['REMOTE_ADDR'] == '192.168.1.33')
+    {
+      return 1;
+    }
+    return 0;
+  }
+
+}
+
 ///////////////////////////////////////////
 
 class urbaProfile extends Profile {
