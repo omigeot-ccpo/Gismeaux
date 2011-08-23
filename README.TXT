@@ -1,9 +1,9 @@
-ATTENTION: Ceci est en cours de travaux. Ce répertoire contient une expérimentation 
-concernant la sécurisation des accès à GISMeaux. En conséquence de quoi, il est très 
-peu recommandé de l'utiliser, sauf si farfouiller dans du code PHP ne vous fait pas 
+ATTENTION: Ceci est en cours de travaux. Ce rÃ©pertoire contient une expÃ©rimentation 
+concernant la sÃ©curisation des accÃ¨s Ã  GISMeaux. En consÃ©quence de quoi, il est trÃ¨s 
+peu recommandÃ© de l'utiliser, sauf si farfouiller dans du code PHP ne vous fait pas 
 peur. Et encore.
 
-Le but initial de cette branche est de tester de nouvelles idées et d'en discuter.
+Le but initial de cette branche est de tester de nouvelles idÃ©es et d'en discuter.
 
 ATTENTION (suite) : Ceci est toujours en travaux puisque l'application doit répondre 
 aux attentes de ses utilisateurs!!
@@ -16,106 +16,106 @@ seront les bienvenus
 PRINCIPALES MODIFICATIONS
 
 * Regroupement des branches "intranet", "internet" et "test_ssl" 
-  en une seule branche, nommée "application".
+  en une seule branche, nommÃ©e "application".
 
 * Rationalisation des inclusions. Les fichiers PHP 
-  partagés se trouvent dans /inc, les fichiers appellés à être 
-  modifiés à l'installation sont dans /conf.
+  partagÃ©s se trouvent dans /inc, les fichiers appellÃ©s Ã  Ãªtre 
+  modifiÃ©s Ã  l'installation sont dans /conf.
 
-* Modularisation des routines de base de données. /inc/database.php 
-  définit désormais une classe (DBpg) et une variable globale ($DB) 
+* Modularisation des routines de base de donnÃ©es. /inc/database.php 
+  dÃ©finit dÃ©sormais une classe (DBpg) et une variable globale ($DB) 
   qui embarque les anciennes fonction "tab_result" et assimilées.
 
-* Un même entête se trouve désormais au début de tous les 
+* Un mÃªme entÃªte se trouve dÃ©sormais au dÃ©but de tous les 
   fichiers PHP inclus. Celui-ci s'assure que les fichiers 
-  ne sont pas appellés directement.
+  ne sont pas appellÃ©s directement.
 
-* Un même entête se trouve désormais au début de tous les 
+* Un mÃªme entÃªte se trouve dÃ©sormais au dÃ©but de tous les 
   autres fichiers PHP. Celui-ci positionne la constante 
   GIS_ROOT et se charge d'inclure les fichiers utiles (via common.php).
 
 * Deux appels de fonction sont fournis pour la gestion des sessions.
-       - Le premier, gis_session_start(), charge les données de la 
-       session si besoin. Il doit être appellé au début de chaque 
+       - Le premier, gis_session_start(), charge les donnÃ©es de la 
+       session si besoin. Il doit Ãªtre appellÃ© au dÃ©but de chaque 
        fichier PHP non-inclus.
        - Le second, gis_init(), s'occupe en plus de vÃ©rifier 
-       l'authentification et - en résumé - d'initialiser une nouvelle 
-       session si besoin. Il ne doit être appellé QUE par les "points 
-       d'entrée" de l'utilisateur dans le systême (carto.php, 
+       l'authentification et - en rÃ©sumÃ© - d'initialiser une nouvelle 
+       session si besoin. Il ne doit Ãªtre appellÃ© QUE par les "points 
+       d'entrÃ©e" de l'utilisateur dans le systÃ¨me (carto.php, 
        index.php, back_office.php, etc.).
 
-* L'authentification s'appuie désormais sur un systême de "profils" 
-  (/inc/profiles.php). Ceux-ci dérivent d'une classe "Profile" et 
-  implémentent divers mécanismes.
+* L'authentification s'appuie dÃ©sormais sur un systÃ¨me de "profils" 
+  (/inc/profiles.php). Ceux-ci dÃ©rivent d'une classe "Profile" et 
+  implÃ©mentent divers mÃ©canismes.
        - Tout d'abord, ils fournissent une fonction qui permet de tester 
-       si le profil s'applique ou non. Ainsi, on peut sélectionner un 
-       profil différent selon que l'utilisateur se connecte depuis une 
-       IP locale ou non, depuis une connexion sécurisée ou non, etc.
+       si le profil s'applique ou non. Ainsi, on peut sÃ©lectionner un 
+       profil diffÃ©rent selon que l'utilisateur se connecte depuis une 
+       IP locale ou non, depuis une connexion sÃ©curisÃ©e ou non, etc.
        - Ensuite, ils fournissent une routine d'identification. Par 
-       exemple, le "CertifiedProfile" (qui gêre les authentifications 
+       exemple, le "CertifiedProfile" (qui gÃ¨re les authentifications 
        par certificat SSL) extrait le nom d'utilisateur du certificat. 
-       Le profil par défaut (InternetProfile) positionne automatiquement 
-       le nom d'utilisateur à "Visiteur". Dans les cas qui s'y prête, 
-       cette étape récupère aussi le mot de passe.
-       - Enfin, ils vérifient par le moyen adéquat que l'utilisateur 
-       est bien ce qu'il prétend. Dans le cas d'un certificat client, 
+       Le profil par dÃ©faut (InternetProfile) positionne automatiquement 
+       le nom d'utilisateur Ã  "Visiteur". Dans les cas qui s'y prÃªte, 
+       cette Ã©tape rÃ©cupÃ¨re aussi le mot de passe.
+       - Enfin, ils vÃ©rifient par le moyen adÃ©quat que l'utilisateur 
+       est bien ce qu'il prÃ©tend. Dans le cas d'un certificat client, 
        le simple fait d'avoir un certificat valide est une garantie suffisante. 
-       Dans le cas d'une authentification sur LDAP, le profil tentera juste 
+       Dans le cas d'une authentification sur LDAP, le protil tentera juste 
        de se connecter au serveur LDAP avec le login et le mot de passe fournis 
        lors de l'identification. Dans le cas du "InternetProfile", 
-       l'authentification est automatiquement réussie.
+       l'authentification est automatiquement rÃ©ussie.
 
-* L'utilisation de mapserv.php - interface à PHP/Mapscript simulant 
+* L'utilisation de mapserv.php - interface Ã  PHP/Mapscript simulant 
   (partiellement) le comportement du CGI de Mapserver - en lieu 
-  et place du-dit CGI. L'idée étant notamment de pouvoir intégrer 
+  et place du-dit CGI. L'idÃ©e Ã©tant notamment de pouvoir intÃ©grer 
   un cache pour les rasters.
 
-* Création d'un /index.php visant à fournir - à terme - un point 
-  d'entrée convivial vers les différentes fonctionnalités. Un tel 
-  point d'entrée devrait, notamment, modifier son contenu en 
-  fonction du profil utilisé. Pour le moment, il est majoritairement
-  utilisé à des fins de débuguage.
+* CrÃ©ation d'un /index.php visant Ã  fournir - Ã  terme - un point 
+  d'entrÃ©e convivial vers les diffÃ©rentes fonctionnalitÃ©s. Un tel 
+  point d'entrÃ©e devrait, notamment, modifier son contenu en 
+  fonction du profil utilisÃ©. Pour le moment, il est majoritairement
+  utilisÃ© Ã  des fins de dÃ©buguage.
 
 * Transfert des "applications" (le cadastre uniquement, pour le moment)
-  dans /apps. L'idée serait, à terme, de mettre en place une inter-
-  face commune aux différentes applications pour permettre l'ajout
+  dans /apps. L'idÃ©e serait, Ã  terme, de mettre en place une inter-
+  face commune aux diffÃ©rentes applications pour permettre l'ajout
   et la suppression "simple" de tels composants. Typiquement, une
-  application devrait être capable de renseigner d'elle-même
+  application devrait Ãªtre capable de renseigner d'elle-mÃªme
   les tables utiles (permissions, etc.).
 
-* Transfert des notions de commune par défaut et d'application 
-  par défaut aux profils. Ceux-ci peuvent éventuellement déléguer
-  cette sélection à un composant tiers (DB, LDAP, etc.)
+* Transfert des notions de commune par dÃ©faut et d'application 
+  par dÃ©faut aux profils. Ceux-ci peuvent Ã©ventuellement dÃ©lÃ©guer
+  cette sÃ©lection Ã  un composant tiers (DB, LDAP, etc.)
 
-* Définit les permissions par rapport à un rôle (chaque utilisateur pouvant 
-  avoir plusieurs rôles) plutôt que par rapport à l'utilisateur
-  lui-même. Ceci permettant de simplifier l'administration, 
-  l'ajout d'un nouvel utilisateur se résumant le plus souvent 
-  à le rattacher à un rôle existant.
+* DÃ©finit les permissions par rapport Ã  un rÃ´le (chaque utilisateur pouvant 
+  avoir plusieurs rÃ´les) plutÃ´t que par rapport Ã  l'utilisateur
+  lui-mÃªme. Ceci permettant de simplifier l'administration, 
+  l'ajout d'un nouvel utilisateur se rÃ©sumant le plus souvent 
+  Ã  le rattacher Ã  un rÃ´le existant.
 
 NOTES DIVERSES
 
-* L'utilisation "simple" de la branche nécessite de faire pointer
-  un hôte virtuel Apache vers /gismeaux/application.
+* L'utilisation "simple" de la branche nÃ©cessite de faire pointer
+  un hÃ´te virtuel Apache vers /gismeaux/application.
 
-* L'utilisation de l'authentification SSL nécessite l'ajout de
-  directives dans Apache (SSLRequire optional) pour l'hôte
+* L'utilisation de l'authentification SSL nÃ©cessite l'ajout de
+  directives dans Apache (SSLRequire optional) pour l'hÃ´te
   virtuel SSL.
 
-* L'authentification SSL nécessite également de configurer une
-  PKI minimaliste : une CA, un certificat serveur signé par 
+* L'authentification SSL nÃ©cessite Ã©galement de configurer une
+  PKI minimaliste : une CA, un certificat serveur signÃ© par 
   la-dite CA et un nombre quelconque de certificats clients 
-  également signés par la CA. L'utilisation d'un outil comme
-  XCA (http://xca.hohnstaedt.de/) peut être d'une grande aide
-  par rapport à la manipulation manuelle des commandes OpenSSL.
+  Ã©galement signÃ©s par la CA. L'utilisation d'un outil comme
+  XCA (http://xca.hohnstaedt.de/) peut Ãªtre d'une grande aide
+  par rapport Ã  la manipulation manuelle des commandes OpenSSL.
 
-* La configuration de la base de données reste - pour 
-  l'essentiel - identique à celle de la branche "normale" de
-  l'application. Quelques tables supplémentaires sont à créer
+* La configuration de la base de donnÃ©es reste - pour 
+  l'essentiel - identique Ã  celle de la branche "normale" de
+  l'application. Quelques tables supplÃ©mentaires sont Ã  crÃ©er
   dans admin_svg. (DATABASE.TXT)
 
 TRUCS ENCORE A FAIRE (SELON LE TEMPS)
 
-* Passer à un "vrai" SRID (au lieu de -1), pour pouvoir être interopérable.
+* Passer Ã  un "vrai" SRID (au lieu de -1), pour pouvoir Ãªtre interopÃ©rable.
 
-* Construire un outil "intégré" de configuration initiale de la DB.
+* Construire un outil "intÃ©grÃ©" de configuration initiale de la DB.
