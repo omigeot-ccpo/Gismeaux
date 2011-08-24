@@ -134,7 +134,7 @@ $controle="";
 $chaine="";
 $symbol="";
 $textsymbol="";
-$extraction="";
+$extraction="chargeinit('";
 $req="select appthe.zoommax,appthe.zoommin,appthe.idtheme from admin_svg.appthe join admin_svg.theme on appthe.idtheme=theme.idtheme where theme.groupe in(select theme.groupe from admin_svg.theme group by theme.groupe having count(theme.groupe)>1) and appthe.idapplication='".$_SESSION["profil"]->appli."' and theme.groupe<>'' order by appthe.idtheme asc";
 $grou=$DB->tab_result($req);
 $zoom_groupe_max=0;
@@ -345,7 +345,7 @@ $req1="select distinct (col_theme.intitule_legende) as intitule_legende,col_them
 	}
 	if($cou[$c]['vu_initial']==1)
 	{
-	$extraction.="extracthtml('".$leg."','".$cous."','','".$typ."');";
+	$extraction.=$leg.",".$cous.", ,".$typ."#";
 	}
 
 if(count($couch)>0)
@@ -563,7 +563,7 @@ $tab_layer.="zlayer['000.postit']=new glayer('".(count($cou)+1)."','FALSE','',''
 $layer.="layer[".$j."]='000.postit';";
 $lay.="controllay[".count($cou)."]=new ylayer(10,50000,'');";
 $_SESSION['controle']= "<g id='controlraster' ></g>\n".$controle."<g id='control".(count($cou)+1)."' visibility='hidden' ></g>\n";
-$_SESSION['extraction']= $extraction;
+$_SESSION['extraction']= substr($extraction,0,strlen($extraction)-1)."');"; 
 $_SESSION['taillecom']=$taillecom;
 $_SESSION['tailleaglo']=$tailleaglo;
 $_SESSION['row_agglo']=$row_agglo;

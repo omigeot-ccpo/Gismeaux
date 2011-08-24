@@ -2989,3 +2989,85 @@ gest_zoom(evt,valz);
 }
 }
 
+function chargeinit(x)
+{
+	
+var reg=new RegExp("[#]+", "g");
+	var coucheinit=x.split(reg);	
+	var nbcou = coucheinit.length ;
+	var reg1=new RegExp("[,]", "g");
+	var reg2=new RegExp("[;]", "g");
+	
+	if(nbcou>1)
+	{
+		
+		for (var i=0; i<nbcou; i++) 
+			{
+				
+			var vale=coucheinit[i].split(reg1);
+			var tablayers=vale[1].split(reg2);	
+			var nblayer = tablayers.length ;
+			
+				if(nblayer>1)
+				{
+					svgdoc.getElementById('control'+parseInt(tablayers[0])).setAttributeNS(null,'visibility','visible');
+					window.top.document.getElementById('coche'+parseInt(tablayers[0])).checked=true;
+					
+					if(vale[3]=="raster" || zlayer[vale[0]].svg_zoomraster>zoomVal || ((nWidth*3300/larmap)>5221 && zlayer[vale[0]].svg_partiel=='1'))
+							{	
+								coucherastervisible+=vale[0]+";";
+							}
+					else
+							{
+								var cher=new RegExp("[|]", "g");
+								var tableau=vale[0].split(cher);
+								for (var i=0; i<tableau.length; i++) 
+								{
+									zlayer[tableau[i]].svg_visible='true';
+								}
+							}
+							
+					for(i=0;i<nblayer;i++)
+						{
+						
+						window.top.document.getElementById('coche'+tablayers[i]).checked=true;
+						svgdoc.getElementById('control'+tablayers[i]).setAttributeNS(null,'visibility','visible');
+						}			
+				
+					couche_init=0;
+				}
+				else
+				{
+					
+				svgdoc.getElementById('control'+vale[1]).setAttributeNS(null,'visibility','visible');
+				window.top.document.getElementById('coche'+vale[1]).checked=true;
+				if(isNaN(vale[1]))
+						 {
+							window.top.document.getElementById('coche'+parseInt(vale[1])).checked=true;
+						 }
+						 
+						if(vale[3]=="raster" || (zlayer[vale[0]].svg_zoomraster>zoomVal || ((nWidth*3300/larmap)>5221 && zlayer[vale[0]].svg_partiel=='1')))
+							{	
+								coucherastervisible+=vale[0]+";";
+								
+								
+							}
+						else
+							{
+								zlayer[vale[0]].svg_visible='true';
+								
+							}
+					
+				}
+			}
+			lecture_control();
+			
+	}
+	else
+	{
+	
+	var vale=x.split(reg1);
+	extracthtml(vale[0],vale[1],vale[2],vale[3]);	
+	}
+	
+}
