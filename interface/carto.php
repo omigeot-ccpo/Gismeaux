@@ -41,14 +41,16 @@ else
 {
 $ref_rep="default";
 }
-$protocol='https';
-if($_SERVER['SERVER_PORT']!=443)
+if ($_SESSION['profil']->protocol)
 {
-$protocol='http';
+        $protocol = $_SESSION['profil']->protocol;
+} else {
+        $protocol='https';
+        if($_SERVER['SERVER_PORT']!=443)
+        {
+                $protocol='http';
+        }
 }
-if ($_SESSION['profil']->protocol != "")
-	$protocol = $_SESSION['profil']->protocol;
-	 
 if (eregi('MSIE', $_SERVER['HTTP_USER_AGENT']))
 {    
 $nav="0";// Internet Explorer 

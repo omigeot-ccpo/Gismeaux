@@ -36,10 +36,15 @@ include_once(GIS_ROOT . '/inc/common.php');
 gis_session_start();
 ini_set("memory_limit" , "100M");
 set_time_limit(0);
-$protocol='https';
-if($_SERVER['SERVER_PORT']!=443)
+if ($_SESSION['profil']->protocol)
 {
-$protocol='http';
+	$protocol = $_SESSION['profil']->protocol;
+} else {
+	$protocol='https';
+	if($_SERVER['SERVER_PORT']!=443)
+	{
+		$protocol='http';
+	}
 }
 $extra_url = "&user=".$DB->db_user."&password=".$DB->db_passwd."&dbname=".$DB->db_name."&host=".$DB->db_host;
 
