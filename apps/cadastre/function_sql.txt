@@ -1,0 +1,135 @@
+ 
+CREATE OR REPLACE FUNCTION cadastre.gm_desc_parcelle(ref character varying, droit character varying)
+  RETURNS text AS
+$BODY$declare
+ligne RECORD;
+rivoli RECORD;
+compteur RECORD;
+chaine text;
+prop text;
+bati text;
+begin
+select * into ligne from cadastre.parcel where ind in ( ref );
+select nom_voie into rivoli from cadastre.voies where code_voie = ligne.ccoriv and commune=ligne.commune;
+select count(*) as cpt into compteur from cadastre.pdlasdgi where commune like ligne.commune and ccosec like ligne.ccosec and dnupla like ligne.dnupla;
+if ligne.gpdl='0' or(ligne.gpdl='1' and compteur.cpt='0') then
+	if ligne.gparbat='1' then
+		chaine := '<tr><td colspan="4" align="center" class="tt1">Fiche d''une parcelle b&acirc;tie ';
+		bati := '<tr><td colspan="4" align="center" class="tt2">';
+		if ligne.cgroup='*' then
+			bati := bati||'Co-propri&eacute;taire</td></tr>';
+			bati := bati||cadastre.gm_liste_copro(ligne.commune,ligne.ccosec,ligne.dnupla,droit);
+		else
+			bati := bati||'Locaux</td></tr>';
+			bati := bati||cadastre.gm_liste_bati_test(ligne.commune,ligne.ccosec,ligne.dnupla,droit);
+		end if;
+	else
+		chaine = '<tr><td colspan="4" align="center" class="tt1">Fiche d''une parcelle non b&acirc;tie ';
+	end if;
+	chaine := chaine||'<img src="../../doc_commune/770284/skins/sig.png" onclick="window.opener.parent.svgWin.cadreparcelle('''||ligne.ind||''')" alt="cadrer sur le SIG" align="right"/></td></td></tr><tr><td>Section</td>';
+	chaine := chaine||'<td>'||ligne.ccosec||'</td><td>Numero</td><td>'||ligne.dnupla||'</td></tr><tr><td>Adresse</td>';
+	chaine := chaine||'<td colspan="3">'||public.gm_sinul(ligne.dnuvoi,' ')||public.gm_sinul(ligne.dindic,' ')||', '||public.gm_sinul(rivoli.nom_voie,' ');
+	chaine := chaine||'</td></tr><tr><td>Contenance</td><td>'||ligne.dcntpa||'</td><td>Date de l''acte</td><td>'||ligne.jdatat||'</td></tr><tr>';
+	chaine := chaine||'<td colspan="4" align="center" class="tt2">Propri&eacute;taire</td></tr>';
+	chaine := chaine||cadastre.gm_liste_proprietaire(ligne.commune,ligne.cgroup,ligne.dnumcp);
+	if ligne.gparbat='1' then 
+	  chaine=chaine||bati;
+	end if;
+else
+	chaine := '';
+	if ligne.gpdl='1' then
+		chaine := chaine||cadastre.gm_terr_ass(ligne.commune,ligne.ccosec,ligne.dnupla, droit);
+	else
+		chaine := chaine||cadastre.gm_terr_ass(ligne.commune,ligne.ccosecr,ligne.dnuplar, droit);
+	end if;
+end if;
+return chaine;
+end
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION cadastre.gm_desc_parcelle(character varying, character varying) OWNER TO sig;
+
+
+CREATE OR REPLACE FUNCTION cadastre.gm_liste_copro(comm character varying, sec character varying, num character varying, droit character varying)
+  RETURNS text AS
+$BODY$declare
+lign RECORD;
+chaine TEXT;
+prop TEXT;
+begin
+chaine :='';
+--droit de l'utilisateur pour lien??
+for lign in select a.*,b.dnupro,c.dnulot,c.dnumql,c.ddenql from cadastre.batidgi as a join cadastre.b_desdgi as b on a.invar=b.invar join cadastre.pdldgi as c 
+	on a.invar=c.invloc where a.commune=comm and ccosec=sec and dnupla=num loop
+	chaine := chaine||'<tr class="tt4"><td>';
+	if ((droit = 'a') or (droit ='e')) then
+	   chaine := chaine||'<a href="fic_bat.php?invar1='||lign.invar||'">B&acirc;timent : </a>';
+	else
+	   chaine := chaine||'batiment : ';
+	end if;
+	chaine := chaine||lign.dnubat||'</td><td>escalier : '||lign.desca||'</td><td>niveau : '||lign.dniv||'</td><td>porte : '||lign.dpor;
+	if ((droit = 'a') or (droit ='e')) then
+	chaine := chaine||'&nbsp;&nbsp;&nbsp;lot : '||lign.dnulot::integer||'&nbsp;&nbsp;&nbsp;quote-part : '||lign.dnumql::integer||'/'||lign.ddenql::integer;
+	end if;
+	chaine := chaine||'</td></tr>';
+	prop := cadastre.gm_liste_coproprietaire(lign.commune,substr(lign.dnupro,1,1)::character varying,substr(lign.dnupro,2,5)::character varying);
+	chaine := chaine||prop;
+end loop;
+return chaine;
+end
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION cadastre.gm_liste_copro(character varying, character varying, character varying, character varying) OWNER TO sig;
+
+
+CREATE OR REPLACE FUNCTION cadastre.gm_terr_ass(comm character varying, ccos character varying, dnup character varying, droit character varying)
+  RETURNS text AS
+$BODY$declare
+ligne RECORD;
+rivoli RECORD;
+chine text;
+prop text;
+bati text;
+test character varying;
+begin
+select * into ligne from cadastre.parcel where commune like comm and ccosec like ccos and dnupla like dnup;
+select nom_voie into rivoli from cadastre.voies where code_voie = ligne.ccoriv and commune=ligne.commune;
+if ligne.gparbat='1' then
+	chine := '<tr><td colspan="4" align="center" class="tt1">Unité fonçière b&acirc;tie ';
+	bati := '<tr><td colspan="4" align="center" class="tt2">';
+	chine := chine||'<img src="../../doc_commune/770284/skins/sig.png" onclick="window.opener.parent.svgWin.cadreparcelle('''||ligne.ind||''')" alt="cadrer sur le SIG" align="right"/></td></td></tr><tr class="tt4"><td>Section</td>';
+	chine := chine||'<td>'||ligne.ccosec||'</td><td>Numero</td><td>'||ligne.dnupla||'</td></tr><tr><td>Adresse</td>';
+	chine := chine||'<td colspan="3">'||public.gm_sinul(ligne.dnuvoi,' ')||public.gm_sinul(ligne.dindic,' ')||', '||public.gm_sinul(rivoli.nom_voie,' ');
+	chine := chine||'</td></tr><tr><td>Contenance</td><td>'||ligne.dcntpa||'</td><td>Date de l''acte</td><td>'||ligne.jdatat||'</td></tr><tr>';
+	if ligne.cgroup='*' then
+		bati := bati||'Co-propri&eacute;taire</td></tr>';
+		bati := bati||cadastre.gm_liste_copro(ligne.commune,ligne.ccosec,ligne.dnupla, droit);
+	else
+		bati := bati||'Locaux</td></tr>';
+		bati := bati||cadastre.gm_liste_bati(ligne.commune,ligne.ccosec,ligne.dnupla, droit);
+	end if;
+	test=ligne.gparbat;
+else
+	chine := '<tr><td colspan="4" align="center" class="tt1">Unité fonçière non b&acirc;tie ';
+end if;
+for ligne in select * from cadastre.parcel where commune like comm and ccosecr like ccos and dnuplar like dnup loop
+select nom_voie into rivoli from cadastre.voies where code_voie = ligne.ccoriv and commune=ligne.commune;
+	chine := chine||'</td></td></tr><tr class="tt4"><td>Section</td>';
+	chine := chine||'<td>'||ligne.ccosec||'</td><td>Numero</td><td>'||ligne.dnupla||'</td></tr><tr><td>Adresse</td>';
+	chine := chine||'<td colspan="3">'||public.gm_sinul(ligne.dnuvoi,' ')||public.gm_sinul(ligne.dindic,' ')||', '||public.gm_sinul(rivoli.nom_voie,' ');
+	chine := chine||'</td></tr><tr><td>Contenance</td><td>'||ligne.dcntpa||'</td><td>Date de l''acte</td><td>'||ligne.jdatat||'</td></tr><tr>';
+	bati := bati||cadastre.gm_liste_copro(ligne.commune,ligne.ccosec,ligne.dnupla, droit);
+end loop;
+chine := chine||'<td colspan="4" align="center" class="tt2">Propri&eacute;taire</td></tr>';
+chine := chine||cadastre.gm_liste_proprietaire(ligne.commune,ligne.cgroup,ligne.dnumcp);
+if test='1' then 
+  chine=chine||bati;
+end if;
+return chine;
+end
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION cadastre.gm_terr_ass(character varying, character varying, character varying, character varying) OWNER TO sig;
