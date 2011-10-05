@@ -21,7 +21,7 @@ if ligne.gpdl='0' or(ligne.gpdl='1' and compteur.cpt='0') then
 			bati := bati||cadastre.gm_liste_copro(ligne.commune,ligne.ccosec,ligne.dnupla,droit);
 		else
 			bati := bati||'Locaux</td></tr>';
-			bati := bati||cadastre.gm_liste_bati_test(ligne.commune,ligne.ccosec,ligne.dnupla,droit);
+			bati := bati||cadastre.gm_liste_bati(ligne.commune,ligne.ccosec,ligne.dnupla,droit);
 		end if;
 	else
 		chaine = '<tr><td colspan="4" align="center" class="tt1">Fiche d''une parcelle non b&acirc;tie ';
