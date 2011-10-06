@@ -569,6 +569,73 @@ while (<THF>) {
 }
 close(fant);
 close(thf);
+open(THF, "$dirbase/REVD166.$ext") || die "Ouverture de $dirbase/REVD166.$ext impossible\n";
+open(parc, ">$dirbase/pdl.csv");
+while(<THF>) {
+	$code_commune=substr($_,0,6);
+         $ccoprel=substr($_,6,3);
+	$ccosecl=substr($_,9,2);
+	$ccosecl=~ s/^\s+//g;
+	$ccosecl=substr("00".$ccosecl,-2,2);
+	$dnuplal=substr($_,11,4);
+         $dnupdl=substr($_,15,3);
+         $dnulot=substr($_,18,7);
+	$cenr=substr($_,25,2);
+         $ccopreb=substr($_,33,3);
+         $invloc=substr($_,36,10);
+         $dnumql=substr($_,46,7);
+         $ddenql=substr($_,53,7);
+	$comma10="\"$code_commune$v$ccoprel$v$ccosecl$v$dnuplal$v$dnupdl$v$dnulot$v$ccopreb$v$invloc$v$dnumql$v$ddenql"."\"\n";
+	print parc $comma10;
+}
+close(parc);
+close(thf);
+open(THF, "$dirbase/REVFPDL.$ext") || die "Ouverture de $dirbase/REVFPDL.$ext impossible\n";
+open(parc10, ">$dirbase/fpdl10.csv");
+open(parc20, ">$dirbase/fpdl20.csv");
+open(parc30, ">$dirbase/fpdl30.csv");
+while(<THF>) {
+	$code_commune=substr($_,0,6);
+         $ccopre=substr($_,6,3);
+	$ccosec=substr($_,9,2);
+	$ccosec=~ s/^\s+//g;
+	$ccosec=substr("00".$ccosec,-2,2);
+	$dnupla=substr($_,11,4);
+         $dnupdl=substr($_,15,3);
+ 	$cenr=substr($_,25,2);
+   if ($cenr=='10'){
+         $dnivim=substr($_,27,1);
+         $ctpdl=substr($_,28,3);
+         $nompdl=substr($_,31,30);
+         $dmrpdl=substr($_,61,20);
+         $gprmut=substr($_,81,1);
+         $dnupro=substr($_,87,6);
+	$comma10="\"$code_commune$v$ccopre$v$ccosec$v$dnupla$v$dnupdl$v$dnivim$v$ctpdl$v$nompdl$v$dmrpdl$v$gprmut$v$dnupro"."\"\n";
+	print parc10 $comma10;
+   }elsif ($cenr=='20'){
+         $ccoprea=substr($_,27,3);
+         $ccoseca=substr($_,30,2);
+         $dnuplaa=substr($_,32,4);
+	$comma20="\"$code_commune$v$ccopre$v$ccosec$v$dnupla$v$dnupdl$v$ccoprea$v$ccoseca$v$dnuplaa"."\"\n";
+	print parc20 $comma20;
+   }else{
+	$dnulot=substr($_,18,7);
+	$cconlo=substr($_,27,1);
+	$dcntlo=substr($_,28,9);
+	$dnumql=substr($_,37,7);
+	$ddenql=substr($_,44,7);
+	$dfilot=substr($_,51,20);
+	$datact=substr($_,71,8);
+	$dnuprol=substr($_,82,6);
+	$dreflf=substr($_,88,5);
+	$comma30="\"$code_commune$v$ccopre$v$ccosec$v$dnupla$v$dnupdl$v$dnulot$v$cconlo$v$dcntlo$v$dnumql$v$ddenql$v$dfilot$v$datact$v$dnuprol$v$dreflf"."\"\n";
+	print parc30 $comma30;
+   }
+}
+close(parc10);
+close(parc20);
+close(parc30);
+close(thf);
 sub ch_vide(){
 	$ch=@_[0];
 	$ch=~ s/\ +$//g;

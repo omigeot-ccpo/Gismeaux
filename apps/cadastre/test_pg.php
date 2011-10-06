@@ -145,6 +145,29 @@ if ($_POST['vpg']=='pgsql') {
 		/* Table des communes */
 		pg_exec($pgx,"CREATE TABLE cadastre.commune(cod_comm varchar(6) NOT NULL,lib_com varchar(50),logo varchar(50));");
 		pg_exec($pgx,"CREATE index ndx_commune_comm on cadastre.commune (cod_comm);");
+		pg_exec($pgx,"CREATE TABLE cadastre.pdldgi (  commune character varying(6) NOT NULL,  ccoprel character varying(3),
+                                                  ccosecl character varying(2),  dnuplal character varying(4),  dnupdl character varying(3),
+                                                  dnulot character varying(7),  ccopreb character varying(3),  invloc character varying(10),
+                                                  dnumql character varying(7)) WITH (  OIDS=TRUE);");
+               pg_exec($pgx,"ALTER TABLE cadastre.pdldgi OWNER TO postgres;");
+               pg_exec($pgx,"CREATE TABLE cadastre.pdlardgi (  commune character varying(6) NOT NULL,  ccopre character varying(3),
+                                                  ccosec character varying(2),  dnupla character varying(4),  dnupdl character varying(3),
+                                                  dnivim character varying(1),  ctpdl character varying(3),  dnompdl character varying(30),
+                                                  dmrpdl character varying(20),  gprmut character varying(1),  dnupro character varying(6)
+                                                   ) WITH ( OIDS=TRUE );");
+               pg_exec($pgx,"ALTER TABLE cadastre.pdlardgi OWNER TO postgres;");
+               pg_exec($pgx,"CREATE TABLE cadastre.pdlasdgi (  commune character varying NOT NULL DEFAULT 6,  ccopre character varying(3),
+                                                   ccosec character varying(2),  dnupla character varying(4),  dnupdl character varying(3),
+                                                   ccoprea character varying(3),  ccoseca character varying(2),  dnuplaa character varying(4)
+                                                   ) WITH OIDS=TRUE );");
+               pg_exec($pgx,"ALTER TABLE cadastre.pdlasdgi OWNER TO postgres;");
+               pg_exec($pgx,"CREATE TABLE cadastre.pdldesdgi ( commune character varying(6) NOT NULL,  ccopre character varying(3),
+                                                   ccosec character varying(2),  dnupla character varying(4),  dnupdl character varying(3),
+                                                   dnulot character varying(7),  cconlo character varying(1),  dcntlo character varying(9),
+                                                   dnumql character varying(7),  ddenql character varying(7),  dfilot character varying(20),
+                                                   datact character varying(8),  dnuprol character varying(6),  dreflf character varying(5)
+                                                   ) WITH ( OIDS=TRUE );");
+               pg_exec($pgx,"ALTER TABLE cadastre.pdldesdgi OWNER TO postgres;");
 	}else{
 		/* Base cadastre existante, on renomme les tables pour historique, et on cr�� les nouvelles */
 		function rename_table($name_tb,$ann,$pgx){
@@ -169,6 +192,10 @@ if ($_POST['vpg']=='pgsql') {
 		rename_table("cadastre.parcel",$_POST['ann_ref'],$pgx);
 		rename_table("cadastre.propriet",$_POST['ann_ref'],$pgx);
 		rename_table("cadastre.voies",$_POST['ann_ref'],$pgx);
+		rename_table("cadastre.pdldgi",$_POST['ann_ref'],$pgx);
+		rename_table("cadastre.pdlardgi",$_POST['ann_ref'],$pgx);
+		rename_table("cadastre.pdlasdgi",$_POST['ann_ref'],$pgx);
+		rename_table("cadastre.pdldesdgi",$_POST['ann_ref'],$pgx);
 		//rename_table("cadastre.commune",$_POST['ann_ref'],$pgx);
 	}
 //fclose($ctab);
@@ -192,6 +219,10 @@ if ($_POST['vpg']=='pgsql') {
 	pg_exec($pgx,"copy cadastre.p_taxat from '".$_POST['rep_f']."/p_taxat.csv' with csv;");
 	pg_exec($pgx,"copy cadastre.p_subdif from '".$_POST['rep_f']."/p_subdif.csv' with csv;");
 	pg_exec($pgx,"copy cadastre.propriet from '".$_POST['rep_f']."/propriet.csv' with csv;");
+	pg_exec($pgx,"copy cadastre.pdldgi from '".$_POST['rep_f']."/pdl.csv' with csv;");
+	pg_exec($pgx,"copy cadastre.pdlardgi from '".$_POST['rep_f']."/fpdl10.csv' with csv;");
+	pg_exec($pgx,"copy cadastre.pdlasdgi from '".$_POST['rep_f']."/fpdl20.csv' with csv;");
+	pg_exec($pgx,"copy cadastre.pdldesdgi from '".$_POST['rep_f']."/fpdl30.csv' with csv;");
 #pg_exec($pgx,"update cadastre.parcel set ind = substr(commune,4,3)||'000'||lpad(ltrim(ccosec),2,'0')||dnupla where oid=oid");
 echo "operation terminée ?";
 }
