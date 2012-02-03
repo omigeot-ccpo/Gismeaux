@@ -62,7 +62,7 @@ $data.="nav=".$_SESSION['nav'].";\n";
 $data.=$_SESSION['tab_layer']."\n";
 $data.=$_SESSION['layer']."\n";
 $data.=$_SESSION['lay']."\n"; 
-$data.="function glayer(controle,visible,zoom_charge,position,zoomraster,partiel,force_charge){
+$data.="function glayer(controle,visible,zoom_charge,position,zoomraster,partiel,force_charge,fixe_symbole){
 	this.svg_controle=controle;
 	this.svg_visible=visible;
 	this.svg_zoom_charge=zoom_charge;
@@ -70,6 +70,7 @@ $data.="function glayer(controle,visible,zoom_charge,position,zoomraster,partiel
 	this.svg_zoomraster=zoomraster;
 	this.svg_partiel=partiel;
 	this.svg_force_charge=force_charge;
+	this.svg_fixe_symbole=fixe_symbole;
 	
 }\n";
 $data.=" function ylayer(zmin,zmax,typ){
@@ -330,4 +331,3 @@ $data.="</svg>";
 //$data=gzcompress("$data",9);
 echo $data;
 ?>
-

@@ -37,11 +37,6 @@ include_once(GIS_ROOT . '/inc/common.php');
 gis_session_start();
 error_reporting (1);
 $extra_url = "&user=".$DB->db_user."&password=".$DB->db_passwd."&dbname=".$DB->db_name."&host=".$DB->db_host;
-
-if ($map_mode)
-        $extra_url .= "&mode=map";
-
-
 //$url_qrcode="https://".$_SERVER["HTTP_HOST"]."/interface/printpdf.php?format=".$_GET['format']."&legende=".$_GET['legende']."&titre=".$_GET['titre']."&raster=".$_GET['raster']."&x=".$_GET['x']."&y=".$_GET['y']."&lar=".$_GET['lar']."&hau=".$_GET['hau']."&zoom=".$_GET['zoom']."&xini=".$_GET['xini']."&yini=".$_GET['yini']."&parce=".$_GET['parce']."&echelle=".$_GET['echelle'];
 
 
@@ -75,7 +70,8 @@ $raster=substr($raster,0,strlen($raster)-1);
 
 $raste=str_replace("_"," ",$raster);
 $raste=explode(";",$raste);
-$raster=str_replace(";","&layer=",$raster);
+//$raster=str_replace(";","&layer=",$raster);
+$raster=str_replace(";"," ",$raster);
 define('FPDF_FONTPATH','../fpdf/font/');
 require('../fpdf/fpdf.php');
 class PDF extends FPDF {
@@ -654,29 +650,17 @@ $application=$app[0]['libelle_appli'];
 //$application=str_replace(" ","_",$application);
 
 //$url='http://'.$serv.'/cgi-bin/mapserv?map='.$fs_root.'/capm/'.$application.'.map&insee='.$code_insee.'&sess='.session_id().'&parce='.stripslashes($_GET['parce']).'&map_imagetype=jpeg&layer=cotation&layer='.$raster.$ech.$mapsize.$extra_url;
-$url='http://'.$serv.'/cgi-bin/mapserv?map='.$fs_root.'/capm/'.$application.'.map&insee='.$code_insee.'&sess='.session_id().'&parce='.stripslashes($_GET['parce']).'&map_imagetype=agg&layer=cotation&layer='.$raster.$ech.$mapsize.$extra_url;
-
-if ($map_mode) {
-        $image = "msnew-" .md5($url);
-        if (!file_exists($fs_root."/tmp/".$image . ".jpg"))
-        {
-                $contenu = file_get_contents($url.$extra_url);
-                $fd = fopen($fs_root."/tmp/".$image . ".jpg" ,'w');
-                fwrite($fd,$contenu);
-                fclose($fd);
-        }
-} else {
-        $contenu=file($url);
-                while (list($ligne,$cont)=each($contenu)){
-                        $numligne[$ligne]=$cont;
-                }
-                $texte=$contenu[$ms_dbg_line];
-                $image=explode('/',$texte);
-                $conte1=explode('.',$image[4]);
-                $image=$conte1[0];
-        }
-
-
+$url='http://'.$serv.'/cgi-bin/mapserv?map='.$fs_root.'/capm/'.$application.'.map&insee='.$code_insee.'&sess='.session_id().'&parce='.stripslashes($_GET['parce']).'&map_imagetype=agg&layer=cotation&layers='.urlencode($raster).$ech.$mapsize.$extra_url;
+//echo $url;
+if ($_SESSION['profil']->getUserName() == 'Olivier Migeot')
+  $url ='http://'.$serv.'/cgi-bin/mapserv?map='.$fs_root.'/capm/'.$application.'.map&idparc=1260000Z0262&map_imagetype=jpeg&insee='.$code_insee.'&sess='.session_id().'&parce='.stripslashes($_GET['parce']).'&layer=cotation&layers='.urlencode($raster).$ech.$mapsize;
+$contenu=file($url);
+while (list($ligne,$cont)=each($contenu)){
+  $numligne[$ligne]=$cont;
+ }
+$texte=$numligne[$ms_dbg_line];
+$text = explode("/", $texte);
+$tex=explode(".",$text[4]);
 $sql="delete from admin_svg.temp_cotation where session_temp='".session_id()."'";
 $DB->exec($sql);
 
@@ -693,7 +677,7 @@ $pdf->FPDF($orientation,$unit,$_GET['format']);
 //création page
 $pdf->AddFont('font1','','font1.php');
 $pdf->AddPage();
-$pdf->RotatedImage('../tmp/'.$image.'.jpg',$posiximage,$posiyimage,$larimage,$hauimage,$angle);
+$pdf->RotatedImage('../tmp/'.$tex[0].'.jpg',$posiximage,$posiyimage,$larimage,$hauimage,$angle);
 $pdf->SetFont('font1','',$sizerosa);
 //echo $logo.",".$posixlogo.",".$posiylogo.",".$larlogo.",".$haulogo.",".$angle;
 $pdf->RotatedText($posixrosa,$posiyrosa,'a',$angle);
@@ -717,7 +701,7 @@ if($_GET['echelle']==0)
 if ($print_basic_copyright)
 {
   $pdf->SetFont('arial','',6);
-  $pdf->RotatedText(5, 5, "Les photographies sont propriété de l'IGN, les données cadastrales sont propriété de la DGI. Reproduction interdite.",0);
+  $pdf->RotatedText(5, 5, "Les photographies sont propriétées de l'IGN, les données cadastrales sont propriétées de la DGI. Reproduction interdite.",0);
 }
 //génération du qrcode;
 $url_qrcode="https://".$_SERVER["HTTP_HOST"]."/interface/qrprint.php?var=".$application."$".$_GET['x']."$".$_GET['y']."$".$_GET['lar']."$".$_GET['hau']."$".$_GET['zoom']."$".$_GET['format']."$".$_GET['legende']."$".$_GET['titre']."$".$_GET['echelle']."$".$_GET['parce']."$".$_GET['raster'];
@@ -803,12 +787,12 @@ if($_GET['legende']==1 || $_GET['legende']==3)
 		    if($vision=="pay")
 		      {	
 			$px=$px+3;
-			$pdf->RotatedText($px,$py+3,$couch[0]['libelle_them'],$angle);
+			$pdf->RotatedText($px,$py+3,utf8_decode($couch[0]['libelle_them']),$angle);
 		      }
 		    else
 		      {
 			$py=$py+3;
-			$pdf->RotatedText($px,$py,$couch[0]['libelle_them'],$angle);
+			$pdf->RotatedText($px,$py,utf8_decode($couch[0]['libelle_them']),$angle);
 		      }
 		    
 		    $idprov=$id;
@@ -831,11 +815,11 @@ if($_GET['legende']==1 || $_GET['legende']==3)
 		//$pdf->Text(8,$pyy,$legend);
 		if($vision=="pay")
 		  {
-		    $pdf->RotatedText($px+3,$py-2,$legend,$angle);
+		    $pdf->RotatedText($px+3,$py-2,utf8_decode($legend),$angle);
 		  }
 		else
 		  {
-		    $pdf->RotatedText($px+5,$py+3,$legend,$angle);
+		    $pdf->RotatedText($px+5,$py+3,utf8_decode($legend),$angle);
 		  }
 		//$pyy=$pyy+3;
 		if($vision=="pay")
@@ -863,6 +847,12 @@ if($_GET['legende']==1 || $_GET['legende']==3)
 	  }
       }
   }
-$pdf->Output();
-die();
+//$pdf->Output();
+//die();
+$resultpdf = $pdf->Output('', 'S');
+$pdfname = 'impression.pdf';
+
+header('Content-disposition: inline; filename='.$pdfname);
+header('Content-type: application/pdf');
+die($resultpdf);
 ?> 

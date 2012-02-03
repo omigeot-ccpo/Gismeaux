@@ -5,52 +5,43 @@ sig@meaux.fr
 
 Ce logiciel est un programme informatique fournissant une interface cartographique WEB communale. 
 
-Ce logiciel est rÃ©gi par la licence CeCILL-C soumise au droit franÃ§ais et
+Ce logiciel est régi par la licence CeCILL-C soumise au droit français et
 respectant les principes de diffusion des logiciels libres. Vous pouvez
 utiliser, modifier et/ou redistribuer ce programme sous les conditions
-de la licence CeCILL-C telle que diffusÃ©e par le CEA, le CNRS et l'INRIA 
+de la licence CeCILL-C telle que diffusée par le CEA, le CNRS et l'INRIA 
 sur le site "http://www.cecill.info".
 
-En contrepartie de l'accessibilitÃ© au code source et des droits de copie,
-de modification et de redistribution accordÃ©s par cette licence, il n'est
-offert aux utilisateurs qu'une garantie limitÃ©e.  Pour les mÃªmes raisons,
-seule une responsabilitÃ© restreinte pÃ¨se sur l'auteur du programme,  le
-titulaire des droits patrimoniaux et les concÃ©dants successifs.
+En contrepartie de l'accessibilité au code source et des droits de copie,
+de modification et de redistribution accordés par cette licence, il n'est
+offert aux utilisateurs qu'une garantie limitée.  Pour les mêmes raisons,
+seule une responsabilité restreinte pèse sur l'auteur du programme,  le
+titulaire des droits patrimoniaux et les concédants successifs.
 
-A cet Ã©gard  l'attention de l'utilisateur est attirÃ©e sur les risques
-associÃ©s au chargement,  Ã  l'utilisation,  Ã  la modification et/ou au
-dÃ©veloppement et Ã  la reproduction du logiciel par l'utilisateur Ã©tant 
-donnÃ© sa spÃ©cificitÃ© de logiciel libre, qui peut le rendre complexe Ã  
-manipuler et qui le rÃ©serve donc Ã  des dÃ©veloppeurs et des professionnels
-avertis possÃ©dant  des connaissances  informatiques approfondies.  Les
-utilisateurs sont donc invitÃ©s Ã  charger  et  tester  l'adÃ©quation  du
-logiciel Ã  leurs besoins dans des conditions permettant d'assurer la
-sÃ©curitÃ© de leurs systÃ¨mes et ou de leurs donnÃ©es et, plus gÃ©nÃ©ralement, 
-Ã  l'utiliser et l'exploiter dans les mÃªmes conditions de sÃ©curitÃ©. 
+A cet égard  l'attention de l'utilisateur est attirée sur les risques
+associés au chargement,  à l'utilisation,  à la modification et/ou au
+développement et à la reproduction du logiciel par l'utilisateur étant 
+donné sa spécificité de logiciel libre, qui peut le rendre complexe à 
+manipuler et qui le réserve donc à des développeurs et des professionnels
+avertis possédant  des connaissances  informatiques approfondies.  Les
+utilisateurs sont donc invités à charger  et  tester  l'adéquation  du
+logiciel à leurs besoins dans des conditions permettant d'assurer la
+sécurité de leurs systèmes et ou de leurs données et, plus généralement, 
+à l'utiliser et l'exploiter dans les mêmes conditions de sécurité. 
 
-Le fait que vous puissiez accÃ©der Ã  cet en-tÃªte signifie que vous avez 
-pris connaissance de la licence CeCILL-C, et que vous en avez acceptÃ© les 
+Le fait que vous puissiez accéder à cet en-tête signifie que vous avez 
+pris connaissance de la licence CeCILL-C, et que vous en avez accepté les 
 termes.*/
 define('GIS_ROOT', '..');
 include_once(GIS_ROOT . '/inc/common.php');
 gis_session_start();
 ini_set("memory_limit" , "100M");
 set_time_limit(0);
-if ($_SESSION['profil']->protocol)
+$protocol='https';
+if($_SERVER['SERVER_PORT']!=443)
 {
-	$protocol = $_SESSION['profil']->protocol;
-} else {
-	$protocol='https';
-	if($_SERVER['SERVER_PORT']!=443)
-	{
-		$protocol='http';
-	}
+$protocol='http';
 }
 $extra_url = "&user=".$DB->db_user."&password=".$DB->db_passwd."&dbname=".$DB->db_name."&host=".$DB->db_host;
-
-if ($map_mode)
-        $extra_url .= "&mode=map";
-
 $countlayer=1;
 //$serv=$_SERVER["SERVER_NAME"];
 $serv="127.0.0.1";
@@ -195,15 +186,15 @@ fputs($myFile, $str1);
 
 $textq="";
 	if ($_GET['raster']!=''){
-	$raster=str_replace("chr(224)","Ã ",$_GET['raster']);
-$raster=str_replace("chr(233)","Ã©",$raster);
-$raster=str_replace("chr(232)","Ã¨",$raster);
-$raster=str_replace("chr(234)","Ãª",$raster);
-$raster=str_replace("chr(226)","Ã¢",$raster);
-$raster=str_replace("chr(231)","Ã§",$raster);
-$raster=str_replace("chr(244)","Ã´",$raster);
-$raster=str_replace("chr(238)","Ã®",$raster);
-$raster=str_replace("chr(251)","Ã»",$raster);
+	$raster=str_replace("chr(224)","à",$_GET['raster']);
+$raster=str_replace("chr(233)","é",$raster);
+$raster=str_replace("chr(232)","è",$raster);
+$raster=str_replace("chr(234)","ê",$raster);
+$raster=str_replace("chr(226)","â",$raster);
+$raster=str_replace("chr(231)","ç",$raster);
+$raster=str_replace("chr(244)","ô",$raster);
+$raster=str_replace("chr(238)","î",$raster);
+$raster=str_replace("chr(251)","û",$raster);
 $raster=str_replace("chr(95)","_",$raster);
 	$rastx=explode(";",$raster);
 	$raster="";
@@ -231,25 +222,14 @@ else
 {
 $url="http://".$serv."/cgi-bin/mapserv?map=".$fs_root."capm/".$application.".map&map_imagetype=jpeg&insee=".$_SESSION['profil']->insee."&layer=".$raster."&minx=".$xm."&miny=".$ym."&maxx=".$xma."&maxy=".$yma."&mapsize=1200%20840&parce=('')".$extra_url;
 }
-if ($map_mode) {
-        $image = "msnew-" .md5($url);
-        if (!file_exists($fs_root."/tmp/".$image . ".jpg"))
-        {
-                $contenu = file_get_contents($url.$extra_url);
-                $fd = fopen($fs_root."/tmp/".$image . ".jpg" ,'w');
-                fwrite($fd,$contenu);
-                fclose($fd);
-        }
-} else {
-        $contenu=file($url);
-                while (list($ligne,$cont)=each($contenu)){
-                        $numligne[$ligne]=$cont;
-                }
-                $texte=$contenu[$ms_dbg_line];
-                $image=explode('/',$texte);
-                $conte1=explode('.',$image[4]);
-                $image=$conte1[0];
-        }
+		$contenu=file($url);
+       		while (list($ligne,$cont)=each($contenu)){
+			$numligne[$ligne]=$cont;
+		}
+		$texte=$numligne[$ms_dbg_line];
+		$image=explode('/',$texte);
+		$conte1=explode('.',$image[4]);
+		$image=$conte1[0];
 		
 	error_reporting ($erreur);
 		$textq.="<g inkscape:groupmode=\"layer\"
@@ -267,15 +247,15 @@ $rast=$_GET['svg'];
 
 if($_GET['nav']!="0")
 {
-$rast=str_replace("chr(224)","Ã ",$_GET['svg']);
-$rast=str_replace("chr(233)","Ã©",$rast);
-$rast=str_replace("chr(232)","Ã¨",$rast);
-$rast=str_replace("chr(234)","Ãª",$rast);
-$rast=str_replace("chr(226)","Ã¢",$rast);
-$rast=str_replace("chr(231)","Ã§",$rast);
-$rast=str_replace("chr(244)","Ã´",$rast);
-$rast=str_replace("chr(238)","Ã®",$rast);
-$rast=str_replace("chr(251)","Ã»",$rast);
+$rast=str_replace("chr(224)","à",$_GET['svg']);
+$rast=str_replace("chr(233)","é",$rast);
+$rast=str_replace("chr(232)","è",$rast);
+$rast=str_replace("chr(234)","ê",$rast);
+$rast=str_replace("chr(226)","â",$rast);
+$rast=str_replace("chr(231)","ç",$rast);
+$rast=str_replace("chr(244)","ô",$rast);
+$rast=str_replace("chr(238)","î",$rast);
+$rast=str_replace("chr(251)","û",$rast);
 $rast=str_replace("chr(60)","<",$rast);
 $rast=str_replace("chr(62)",">",$rast);
 $rast=str_replace("chr(63)","?",$rast);
@@ -294,7 +274,7 @@ for($i=0;$i<count($ras);$i++)
 	$id[$i]=$ra[0];
 }	
 $ylegend=32.045+20*count($id);
-$sql="select theme.libelle_them,appthe.idappthe,appthe.ordre,theme.schema,theme.tabl,col_theme.colonn,col_theme.intitule_legende,admin_svg.v_fixe(col_theme.valeur_texte),col_theme.valeur_mini,col_theme.valeur_maxi,col_theme.valeur_texte,sinul(col_theme.fill, style.fill) as fill,sinul(col_theme.stroke_rgb, style.stroke_rgb) as stroke_rgb,sinul(col_theme.symbole,style.symbole) as symbole,sinul(col_theme.opacity,style.opacity) as opacity,sinul(col_theme.font_familly,style.font_familly) as font_familly,sinul(col_theme.font_size,style.font_size) as font_size,appthe.mouseover,appthe.mouseout,appthe.click,appthe.idtheme,theme.partiel,sinul(col_theme.stroke_width,style.stroke_width) as stroke_width from admin_svg.appthe join admin_svg.theme on appthe.idtheme=theme.idtheme left outer join  admin_svg.col_theme on appthe.idappthe=col_theme.idappthe left outer join  admin_svg.style on appthe.idtheme=style.idtheme where appthe.idapplication='".$_SESSION['profil']->appli."' group by theme.libelle_them,appthe.idappthe,appthe.ordre,theme.schema,theme.tabl,col_theme.colonn,col_theme.intitule_legende,admin_svg.v_fixe(col_theme.valeur_texte),col_theme.valeur_mini,col_theme.valeur_maxi,col_theme.valeur_texte,sinul(col_theme.fill, style.fill),sinul(col_theme.stroke_rgb, style.stroke_rgb),sinul(col_theme.symbole,style.symbole),sinul(col_theme.opacity,style.opacity),sinul(col_theme.font_familly,style.font_familly),sinul(col_theme.font_size,style.font_size),appthe.mouseover,appthe.mouseout,appthe.click,appthe.idtheme,theme.partiel,sinul(col_theme.stroke_width,style.stroke_width) order by appthe.ordre desc";
+$sql="select theme.vu_anonyme,theme.libelle_them,appthe.idappthe,appthe.ordre,theme.schema,theme.tabl,col_theme.colonn,col_theme.intitule_legende,admin_svg.v_fixe(col_theme.valeur_texte),col_theme.valeur_mini,col_theme.valeur_maxi,col_theme.valeur_texte,sinul(col_theme.fill, style.fill) as fill,sinul(col_theme.stroke_rgb, style.stroke_rgb) as stroke_rgb,sinul(col_theme.symbole,style.symbole) as symbole,sinul(col_theme.opacity,style.opacity) as opacity,sinul(col_theme.font_familly,style.font_familly) as font_familly,sinul(col_theme.font_size,style.font_size) as font_size,appthe.mouseover,appthe.mouseout,appthe.click,appthe.idtheme,theme.partiel,sinul(col_theme.stroke_width,style.stroke_width) as stroke_width from admin_svg.appthe join admin_svg.theme on appthe.idtheme=theme.idtheme left outer join  admin_svg.col_theme on appthe.idappthe=col_theme.idappthe left outer join  admin_svg.style on appthe.idtheme=style.idtheme where appthe.idapplication='".$_SESSION['profil']->appli."' group by theme.vu_anonyme,theme.libelle_them,appthe.idappthe,appthe.ordre,theme.schema,theme.tabl,col_theme.colonn,col_theme.intitule_legende,admin_svg.v_fixe(col_theme.valeur_texte),col_theme.valeur_mini,col_theme.valeur_maxi,col_theme.valeur_texte,sinul(col_theme.fill, style.fill),sinul(col_theme.stroke_rgb, style.stroke_rgb),sinul(col_theme.symbole,style.symbole),sinul(col_theme.opacity,style.opacity),sinul(col_theme.font_familly,style.font_familly),sinul(col_theme.font_size,style.font_size),appthe.mouseover,appthe.mouseout,appthe.click,appthe.idtheme,theme.partiel,sinul(col_theme.stroke_width,style.stroke_width) order by appthe.ordre desc";
 $cou=$DB->tab_result($sql);
 
 for ($l=0;$l<count($cou);$l++){
@@ -302,12 +282,35 @@ for ($l=0;$l<count($cou);$l++){
 $req1="select distinct (col_theme.intitule_legende) as intitule_legende from admin_svg.appthe join admin_svg.col_theme on appthe.idappthe=col_theme.idappthe join admin_svg.theme on appthe.idtheme=theme.idtheme";
 	if($cou[$l]['v_fixe']=='1' and $cou[$l]['colonn']<>'')
 	{
-	$req1.=" join ".$cou[$l]['schema'].".".$cou[$l]['tabl']." on col_theme.valeur_texte=".$cou[$l]['tabl'].".".$cou[$l]['colonn']." where 					appthe.idapplication='".$_SESSION["profil"]->appli."' and theme.libelle_them='".$cou[$l]['libelle_them']."'";
+	
+	
+	if($cou[$l]['vu_anonyme']=='t')
+	{
+	$req1.=" where appthe.idapplication='".$_SESSION["profil"]->appli."' and theme.libelle_them='".$cou[$l]['libelle_them']."'";
+	}
+	else
+	{
+	$req1.=" join ".$cou[$l]['schema'].".".$cou[$l]['tabl']." on col_theme.valeur_texte=".$cou[$l]['tabl'].".".$cou[$l]['colonn']." where appthe.idapplication='".$_SESSION["profil"]->appli."' and theme.libelle_them='".$cou[$l]['nom_theme']."'";
+	}
+	
+	//$req1.=" join ".$cou[$l]['schema'].".".$cou[$l]['tabl']." on col_theme.valeur_texte=".$cou[$l]['tabl'].".".$cou[$l]['colonn']." where 					appthe.idapplication='".$_SESSION["profil"]->appli."' and theme.libelle_them='".$cou[$l]['libelle_them']."'";
 	if($cou[$l]['schema']!="bd_topo")
 	{
-		if(substr($_SESSION["profil"]->insee, -3)!='000' )
+		/*if(substr($_SESSION["profil"]->insee, -3)!='000' )
 				{$req1.=" and (".$cou[$l]['tabl'].".code_insee like '".$_SESSION["profil"]->insee."'  or code_insee is null) ";}
-		else{$req1.=" and (".$cou[$l]['tabl'].".code_insee like '".substr($_SESSION["profil"]->insee,0,3)."%'  or code_insee is null) ";}
+		else{$req1.=" and (".$cou[$l]['tabl'].".code_insee like '".substr($_SESSION["profil"]->insee,0,3)."%'  or code_insee is null) ";}*/
+		
+		
+		if(substr($_SESSION["profil"]->insee, -3)!='000' )
+				{
+				if($cou[$l]['vu_anonyme']!='t')
+	
+				{$req1.=" and (".$cou[$l]['tabl'].".code_insee like '".$_SESSION["profil"]->insee."'  or code_insee is null) ";}
+				}
+		else{
+		if($cou[$l]['vu_anonyme']!='t')
+		{$req1.=" and (".$cou[$l]['tabl'].".code_insee like '".substr($_SESSION["profil"]->insee,0,3)."%'  or code_insee is null) ";}
+		}
 	 }
 	 
 	}
@@ -315,7 +318,8 @@ $req1="select distinct (col_theme.intitule_legende) as intitule_legende from adm
 	{
 	$req1.=" where appthe.idapplication='".$_SESSION["profil"]->appli."' and theme.libelle_them='".$cou[$l]['libelle_them']."' ";
 	}
-	$couch=$DB->tab_result($req1);
+	echo $req1;
+	//$couch=$DB->tab_result($req1);
 
 if(count($couch)>0)
 {
@@ -368,12 +372,14 @@ $d="select * from admin_svg.col_sel where idtheme='".$cou[$l]['idtheme']."'";
                 if (substr($_SESSION['profil']->insee, -3) == "000")
 					{
 					
-                	$f.=" where (code_insee like '".substr($_SESSION['profil']->insee,0,3)."%' or code_insee is null) and Transform(".$geometrie.",".$projection.") && box'($xm,$ym,$xma,$yma)'";
-            		}
+                	//$f.=" where (code_insee like '".substr($_SESSION['profil']->insee,0,3)."%' or code_insee is null) and Transform(".$geometrie.",".$projection.") && box'($xm,$ym,$xma,$yma)'";
+            		
+					$f.=" where (code_insee like '".substr($_SESSION['profil']->insee,0,3)."%' or code_insee is null) and ".$geometrie." && st_transform (ST_GeomFromText('POLYGON(($xm $ym,$xma $ym,$xma $yma,$xm $yma,$xm $ym))',".$projection."),find_srid('','".$cou[$l]['schema'].".".$cou[$l]['tabl']."','".$geometrie."'))";
+					}
 				else
 					{
-					
-                	$f.=" where (code_insee like '".$_SESSION['profil']->insee."%' or code_insee is null) and Transform(".$geometrie.",".$projection.") && box'($xm,$ym,$xma,$yma)'";
+					$f.=" where (code_insee like '".$_SESSION['profil']->insee."%' or code_insee is null) and ".$geometrie." && st_transform (ST_GeomFromText('POLYGON(($xm $ym,$xma $ym,$xma $yma,$xm $yma,$xm $ym))',".$projection."),find_srid('','".$cou[$l]['schema'].".".$cou[$l]['tabl']."','".$geometrie."'))";
+                	//$f.=" where (code_insee like '".$_SESSION['profil']->insee."%' or code_insee is null) and Transform(".$geometrie.",".$projection.") && box'($xm,$ym,$xma,$yma)'";
             		}
             }
 			
@@ -385,17 +391,19 @@ $d="select * from admin_svg.col_sel where idtheme='".$cou[$l]['idtheme']."'";
 		$type_geo="";	
 		if($geometrie!="")
 		{
-		$dd="select distinct geometrytype(".$geometrie.") as geome from ".$cou[$l]['schema'].".".$cou[$l]['tabl'];
-		if($whr[0]['clause']!='')
+		//$dd="select distinct geometrytype(".$geometrie.") as geome from ".$cou[$l]['schema'].".".$cou[$l]['tabl'];
+		$dd="select type as geome from public.geometry_columns where f_table_schema='".$cou[$l]['schema']."' and f_table_name='".$cou[$l]['tabl']."' and  f_geometry_column='".$geometrie."'";
+		
+		/*if($whr[0]['clause']!='')
 		{
 		$dd.=" where ".str_replace("VALEUR","'".$_SESSION['profil']->insee."'",$whr[0]['clause']);
-		}
+		}*/
 		$geo=$DB->tab_result($dd);
-		if($geo[0]['geome']=="POINT" AND $cou[$l]['symbole']!="") //si symbole
+		if(($geo[0]['geome']=="POINT" || $geo[0]['geome']=="MULTIPOINT") AND $cou[$l]['symbole']!="") //si symbole
 		{
 			$type_geo="symbole";
 		}
-		else if($geo[0]['geome']=="POINT") //si texte
+		else if($geo[0]['geome']=="POINT" AND $cou[$l]['font_size']!='') //si texte
 		{
 		$type_geo="texte";
 		}
@@ -457,7 +465,7 @@ if($type_geo!="texte_chemin")
 {	 
 $textq="<g inkscape:groupmode=\"layer\"
      id=\"layer".$countlayer."\"
-     inkscape:label=\"".$label."\" style=\"clip-path:url(#masque);".$styl."\" ";
+     inkscape:label=\"".utf8_decode($label)."\" style=\"clip-path:url(#masque);".$styl."\" ";
 
 $textq.=">\n";
 fputs($myFile, $textq);
@@ -479,7 +487,7 @@ $countlayer=$countlayer+1;
 					}
 					$legend.="<use transform=\"matrix(1,0,0,-1,-150,".$ylegend.")\" width=\"10\"  height=\"10\" xlink:href=\"#".$cou[$l]['symbole']."\" style=\"".$fill_legend.$strok_legend.$opa_legend."\"/>";
 					//$legend.="<text x=\"-150\" y=\"".$ylegend."\" style=\"".$fill_legend.$strok_legend.$opa_legend."font-size:11pt;font-family:svg\">".$cou[$l]['symbole']."</text>\n";
-					$legend.="<text x=\"-130\" y=\"".$ylegend."\" style=\"fill:black;font-size:11pt;font-family:arial\">".$label."</text>\n";
+					$legend.="<text x=\"-130\" y=\"".$ylegend."\" style=\"fill:black;font-size:11pt;font-family:arial\">".utf8_decode($label)."</text>\n";
 					$ylegend=$ylegend-20;
 				}
 	elseif($type_geo=="texte")
@@ -500,7 +508,7 @@ $countlayer=$countlayer+1;
 					}
 					//$legend.="<text x=\"-150\" y=\"".$ylegend."\" style=\"".$fill_legend.$strok_legend.$opa_legend."font-size:11pt;font-family:svg\">q</text>\n";
 					$legend.="<rect x=\"-150\" y=\"".($ylegend-10)."\"  height='10' width='10' style=\"".$fill_legend.$opa_legend."stroke:black;stroke-width:0.2\" />";
-					$legend.="<text x=\"-130\" y=\"".$ylegend."\" style=\"fill:black;font-size:11pt;font-family:arial\">".$label."</text>\n";
+					$legend.="<text x=\"-130\" y=\"".$ylegend."\" style=\"fill:black;font-size:11pt;font-family:arial\">".utf8_decode($label)."</text>\n";
 					$ylegend=$ylegend-20;
 				}
 	elseif($type_geo=="texte_chemin")
@@ -516,7 +524,7 @@ $countlayer=$countlayer+1;
 					fputs($myFile, $textq);
 					}
 				
-				$textq="</g><g inkscape:groupmode=\"layer\" id=\"layer".$countlayer."\" inkscape:label=\"".$label."\" style=\"clip-path:url(#masque);".$styl."\" >\n";
+				$textq="</g><g inkscape:groupmode=\"layer\" id=\"layer".$countlayer."\" inkscape:label=\"".utf8_decode($label)."\" style=\"clip-path:url(#masque);".$styl."\" >\n";
 				fputs($myFile, $textq);
 				$countlayer=$countlayer+1;
 				for ($f=0;$f<count($res);$f++)
@@ -528,7 +536,7 @@ $countlayer=$countlayer+1;
 				fputs($myFile, $textq);	
 				//$legend.="<text x=\"-150\" y=\"".$ylegend."\" style=\"".$fill_legend.$strok_legend.$opa_legend."font-size:11pt;font-family:svg\">q</text>\n";
 				$legend.="<rect x=\"-150\" y=\"".($ylegend-10)."\"  height='10' width='10' style=\"".$fill_legend.$opa_legend."stroke:black;stroke-width:0.2\" />";
-					$legend.="<text x=\"-130\" y=\"".$ylegend."\" style=\"fill:black;font-size:11pt;font-family:arial\">".$label."</text>\n";
+					$legend.="<text x=\"-130\" y=\"".$ylegend."\" style=\"fill:black;font-size:11pt;font-family:arial\">".utf8_decode($label)."</text>\n";
 					$ylegend=$ylegend-20;
 				}
 	
@@ -550,7 +558,7 @@ $countlayer=$countlayer+1;
 					}
 					//legend.="<text x=\"-150\" y=\"".$ylegend."\" style=\"".$fill_legend.$strok_legend.$opa_legend."font-size:11pt;font-family:svg\">q</text>\n";
 					$legend.="<rect x=\"-150\" y=\"".($ylegend-10)."\"  height='10' width='10' style=\"".$fill_legend.$opa_legend."stroke:black;stroke-width:0.2\" />";
-					$legend.="<text x=\"-130\" y=\"".$ylegend."\" style=\"fill:black;font-size:11pt;font-family:arial\">".$label."</text>\n";
+					$legend.="<text x=\"-130\" y=\"".$ylegend."\" style=\"fill:black;font-size:11pt;font-family:arial\">".utf8_decode($label)."</text>\n";
 					$ylegend=$ylegend-20;
 				
 				}
@@ -600,4 +608,3 @@ exec("mv ".$fs_root."tmp/".$_GET['nom'].".svg ".$fs_root."tmp/carte".$da.".svg")
 exec("zip -j ".$fs_root."tmp/carte".$da.".zip ".$fs_root."tmp/carte".$da.".svg".$ch_image);
 header("Location: ".$protocol."://".$_SERVER['HTTP_HOST']."/tmp/carte".$da.".zip");
 ?> 
-

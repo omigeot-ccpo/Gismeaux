@@ -36,10 +36,12 @@ include_once(GIS_ROOT . '/inc/common.php');
 gis_session_start();
 $req="select schema,tabl from admin_svg.theme where idtheme='".$_GET["idtheme"]."'";
 $re=$DB->tab_result($req);
+$req1="select clause from admin_svg.col_where where idtheme='".$_GET["idtheme"]."'";
+$re1=$DB->tab_result($req1);
 
 if($_GET["type"]=="fixe")
 {
-$req="select distinct ".$_GET["appel"]." as retour from ".$re[0]['schema'].".".$re[0]['tabl'];
+$req="select distinct ".$_GET["appel"]." as retour from ".$re[0]['schema'].".".$re[0]['tabl']." where ".$re1[0]['clause'];
 $col=$DB->tab_result($req);
 $d="";
 for ($z=0;$z<count($col);$z++)
@@ -57,7 +59,7 @@ if(eregi("area", $_GET["appel"]))
 {
 $_GET["appel"]="abs(".$_GET["appel"].")";
 }
-$req="select min(".$_GET["appel"].") as val1,AVG(".$_GET["appel"].") as val2,max(".$_GET["appel"].") as val3 from ".$re[0]['schema'].".".$re[0]['tabl'];
+$req="select min(".$_GET["appel"].") as val1,AVG(".$_GET["appel"].") as val2,max(".$_GET["appel"].") as val3 from ".$re[0]['schema'].".".$re[0]['tabl']." where ".$re1[0]['clause'];
 $col=$DB->tab_result($req);
 $d="";
 echo $col[0]['val1'].'#'.$col[0]['val2'].'#'.$col[0]['val3'];

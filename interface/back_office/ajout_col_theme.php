@@ -61,11 +61,11 @@ $coulfill=$_GET["couleur"];
 }
 if($_GET["type"]=="fourchette")
 {
-$requete="insert into admin_svg.col_theme (idappthe,colonn,intitule_legende,valeur_mini,valeur_maxi,valeur_texte,fill,stroke_rgb,font_size,symbole,id_symbole,opacity,ordre) values('".$_GET["idappthe"]."','".$_GET["colonn"]."','".$_GET["legende"]."','".$_GET["valmini"]."','".$_GET["valmaxi"]."','','".$coulfill."','".$coulstroke."','".$col[0]['font_size']."','".$col[0]['symbole']."','".$col[0]['id_symbole']."','1',".$_GET["ordre"].")";
+$requete="insert into admin_svg.col_theme (idappthe,colonn,intitule_legende,valeur_mini,valeur_maxi,valeur_texte,fill,stroke_rgb,font_size,symbole,id_symbole,opacity,ordre) values('".$_GET["idappthe"]."','".$_GET["colonn"]."','".utf8_encode($_GET["legende"])."','".$_GET["valmini"]."','".$_GET["valmaxi"]."','','".$coulfill."','".$coulstroke."','".$col[0]['font_size']."','".$col[0]['symbole']."','".$col[0]['id_symbole']."','1',".$_GET["ordre"].")";
 }
 else
 {
-$requete="insert into admin_svg.col_theme (idappthe,colonn,intitule_legende,valeur_texte,fill,stroke_rgb,font_size,symbole,id_symbole,opacity,ordre) values('".$_GET["idappthe"]."','".$_GET["colonn"]."','".$_GET["legende"]."','".$_GET["valtexte"]."','".$coulfill."','".$coulstroke."','".$col[0]['font_size']."','".$col[0]['symbole']."','".$col[0]['id_symbole']."','1',".$_GET["ordre"].")";
+$requete="insert into admin_svg.col_theme (idappthe,colonn,intitule_legende,valeur_texte,fill,stroke_rgb,font_size,symbole,id_symbole,opacity,ordre) values('".$_GET["idappthe"]."','".$_GET["colonn"]."','".utf8_encode($_GET["legende"])."','".utf8_encode($_GET["valtexte"])."','".$coulfill."','".$coulstroke."','".$col[0]['font_size']."','".$col[0]['symbole']."','".$col[0]['id_symbole']."','1',".$_GET["ordre"].")";
 }
 //echo $requete;
 $DB->exec($requete);

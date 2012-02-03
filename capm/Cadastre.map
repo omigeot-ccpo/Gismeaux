@@ -1,5 +1,5 @@
 MAP 
-NAME Cadastre 
+NAME cadastre 
 STATUS on 
 SIZE 3100 2600 
 UNITS meters 
@@ -29,11 +29,11 @@ FORMATOPTION "INTERLACE=OFF"
 FORMATOPTION "QUALITY=100" 
 END 
 PROJECTION 
-"+init=epsg:3949" 
+"init=IGNF:RGF93CC49" 
 END 
 WEB 
 TEMPLATE capm_svg.php 
-IMAGEPATH "/var/www/application/tmp/" 
+IMAGEPATH "/home/sig/gismeaux/application/tmp/" 
 IMAGEURL "/tmp/" 
 LOG /home/sig/gismeaux/application/tmp/mapserver.log 
 END 
@@ -177,30 +177,56 @@ POINTS 1 1 END
 FILLED TRUE 
 END 
 LAYER 
-NAME "ortho-ia" group "ortho-ia" 
+NAME "ortho-photo50" group "ortho-photo" 
 STATUS on 
 PROJECTION 
-"+init=epsg:3949" 
+"init=IGNF:RGF93CC49" 
 END 
 TYPE raster 
-TILEINDEX "/var/www/ortho/index.shp" 
+TILEINDEX "/home/sig/gismeaux/application/capm/data/orthotiff.shp" 
 TILEITEM "location" 
 END 
  
 LAYER 
-CONNECTIONTYPE postgis 
-NAME "parcelles_communales" group "parcelles_communales" 
-CONNECTION "user=%user% password=%password% dbname=%dbname% host=%host%" 
-DATA "the_geom from (select the_geom from cadastre.parcelle1 where  prop1 in(select prop1 from cadastre.propriet where dnuper in (select dnuper from admin_svg.commune where idcommune='%insee%%' or idagglo='%insee%%')) and parcelle1.code_insee like '%insee%%') as neo using unique the_geom" 
+NAME "ortho-photo2000" group "ortho-photo" 
 STATUS on 
 PROJECTION 
-"+init=epsg:3949" 
+"init=IGNF:RGF93CC49" 
+END 
+TYPE raster 
+TILEINDEX "/home/sig/carte/script_tile_orthos/doq.shp" 
+TILEITEM "location" 
+MAXSCALE 1500 
+MINSCALE 10
+END
+ 
+LAYER 
+NAME "ortho-photo1000" group "ortho-photo" 
+STATUS on 
+PROJECTION 
+"init=IGNF:RGF93CC49" 
+END 
+TYPE raster 
+TILEINDEX "/home/sig/carte/script_tile_orthos/dop.shp" 
+TILEITEM "location"
+ MAXSCALE 100000 
+MINSCALE 1500
+
+END 
+ 
+LAYER 
+CONNECTIONTYPE postgis 
+NAME "Parcelle_ville" group "Parcelle_ville" 
+CONNECTION "user=%user% password=%password% dbname=%dbname% host=%host%" 
+DATA "the_geom from (select the_geom from cadastre.parcelle1 where  prop1 in(select prop1 from cadastre.propriet where dnuper in (select dnuper from admin_svg.commune where idcommune like '%insee%%' or idagglo like '%insee%%')) and parcelle1.code_insee like '%insee%%') as neo using unique the_geom" 
+STATUS on 
+PROJECTION 
+"init=IGNF:RGF93CC49" 
 END 
 TYPE polygon 
 CLASS 
 STYLE 
-COLOR 17 165 17 
-OPACITY 50 
+COLOR 131 214 164 
 END 
 STYLE 
 OUTLINECOLOR 0 0 0 
@@ -210,60 +236,58 @@ END
  
 LAYER 
 CONNECTIONTYPE postgis 
-NAME "Bati_dur" group "batiments" 
+NAME "Bati_dur" group "batiment" 
 CONNECTION "user=%user% password=%password% dbname=%dbname% host=%host%" 
 DATA "the_geom from cadastre.batiment using unique the_geom" 
 STATUS on 
 PROJECTION 
-"+init=epsg:3949" 
+"init=IGNF:RGF93CC49" 
 END 
 TYPE polygon 
 FILTER "code_insee like '%insee%%' or code_insee is null" 
 CLASS 
 EXPRESSION ('[constructi]' eq 'Bati dur') 
 STYLE 
-COLOR 207 27 31 
+COLOR 190 190 190 
 END 
 END 
 END 
  
 LAYER 
 CONNECTIONTYPE postgis 
-NAME "Bati_leger" group "batiments" 
+NAME "Bati_leger" group "batiment" 
 CONNECTION "user=%user% password=%password% dbname=%dbname% host=%host%" 
 DATA "the_geom from cadastre.batiment using unique the_geom" 
 STATUS on 
 PROJECTION 
-"+init=epsg:3949" 
+"init=IGNF:RGF93CC49" 
 END 
 TYPE polygon 
 FILTER "code_insee like '%insee%%' or code_insee is null" 
 CLASS 
 EXPRESSION ('[constructi]' eq 'Bati leger') 
 STYLE 
-COLOR 237 170 173 
+COLOR 220 220 220 
 END 
 END 
 END 
  
 LAYER 
 CONNECTIONTYPE postgis 
-NAME "parcelles" group "parcelles" 
+NAME "habillage" group "habillage" 
 CONNECTION "user=%user% password=%password% dbname=%dbname% host=%host%" 
-DATA "the_geom from cadastre.parcelle using unique the_geom" 
+DATA "the_geom from cadastre.t_line using unique oid" 
 STATUS on 
 PROJECTION 
-"+init=epsg:3949" 
+"init=IGNF:RGF93CC49" 
 END 
-TYPE polygon 
+TYPE line 
 FILTER "code_insee like '%insee%%' or code_insee is null" 
 CLASS 
 STYLE 
-COLOR 119 138 117 
-OPACITY 20 
-END 
-STYLE 
-OUTLINECOLOR 174 174 177 
+OUTLINECOLOR 50 50 50 
+symbol "circle" 
+SIZE 0.1 
 END 
 END 
 END 
@@ -275,12 +299,12 @@ CONNECTION "user=%user% password=%password% dbname=%dbname% host=%host%"
 DATA "the_geom from cadastre.nomvoie using unique the_geom" 
 STATUS on 
 PROJECTION 
-"+init=epsg:3949" 
+"init=IGNF:RGF93CC49" 
 END 
 TYPE annotation 
 FILTER "code_insee like '%insee%%' or code_insee is null" 
 CLASS 
-text ([texte] [texte2] [texte3] [texte4] [texte5] [texte6] [texte7] [texte8] [texte9] [texte10]) 
+text ([texte]  [texte2]  [texte3]  [texte4]  [texte5]  [texte6]  [texte7]  [texte8]  [texte9]  [texte10]) 
 label 
 angle follow 
 type truetype 
@@ -294,12 +318,107 @@ END
  
 LAYER 
 CONNECTIONTYPE postgis 
+NAME "num_voie" group "num_voie" 
+CONNECTION "user=%user% password=%password% dbname=%dbname% host=%host%" 
+DATA "the_geom from cadastre.numvoie using unique the_geom" 
+STATUS on 
+PROJECTION 
+"init=IGNF:RGF93CC49" 
+END 
+TYPE annotation 
+FILTER "code_insee like '%insee%%' or code_insee is null" 
+CLASS 
+text ([texte]) 
+label 
+angle follow 
+type truetype 
+font "arial" 
+position cc 
+size 8 
+COLOR 0 0 255 
+END 
+END 
+END 
+ 
+LAYER 
+CONNECTIONTYPE postgis 
+NAME "ref_cadastrale" group "ref_cadastrale" 
+CONNECTION "user=%user% password=%password% dbname=%dbname% host=%host%" 
+DATA "the_geom from cadastre.refcadastre using unique the_geom" 
+STATUS on 
+PROJECTION 
+"init=IGNF:RGF93CC49" 
+END 
+TYPE annotation 
+FILTER "code_insee like '%insee%%' or code_insee is null" 
+CLASS 
+text ([identifiant]) 
+label 
+angle follow 
+type truetype 
+font "arial" 
+position cc 
+size 3 
+COLOR 0 0 136 
+END 
+END 
+END 
+ 
+LAYER 
+CONNECTIONTYPE postgis 
+NAME "parcelle" group "parcelle" 
+CONNECTION "user=%user% password=%password% dbname=%dbname% host=%host%" 
+DATA "the_geom from cadastre.parcelle using unique the_geom" 
+STATUS on 
+PROJECTION 
+"init=IGNF:RGF93CC49" 
+END 
+TYPE polygon 
+FILTER "identifian in %parce%" 
+LABELITEM identifian 
+CLASS 
+COLOR 150 254 150 
+LABEL 
+TYPE truetype 
+ANTIALIAS true 
+FONT "arial" 
+POSITION cc 
+size 10 
+END 
+END 
+TRANSPARENCY 70 
+END 
+ 
+LAYER 
+CONNECTIONTYPE postgis 
+NAME "parcelle" group "parcelle" 
+CONNECTION "user=%user% password=%password% dbname=%dbname% host=%host%" 
+DATA "the_geom from cadastre.parcelle using unique the_geom" 
+STATUS on 
+PROJECTION 
+"init=IGNF:RGF93CC49" 
+END 
+TYPE polygon 
+FILTER "code_insee like '%insee%%' or code_insee is null" 
+CLASS 
+STYLE 
+COLOR 128 128 128 
+OPACITY 5 
+END 
+STYLE 
+OUTLINECOLOR 0 0 0 
+END 
+END 
+END 
+ 
+LAYER 
+CONNECTIONTYPE postgis 
 NAME "cotation" group "cotation" 
 CONNECTION "user=%user% password=%password% dbname=%dbname% host=%host%" 
 DATA "the_geom FROM admin_svg.temp_cotation using unique the_geom" 
 STATUS on 
 PROJECTION 
-"+init=epsg:3949" 
+"init=IGNF:RGF93CC49" 
 END 
 TYPE line 
 FILTER "session_temp like '%sess%'" 

@@ -129,7 +129,7 @@ if($col1[0]['clause'])
 {
 	if($_GET["clause"])
 	{
-	$requete="update admin_svg.col_where set clause='".$_GET["clause"]."' where idtheme='".$_GET["idtheme"]."'";
+	$requete="update admin_svg.col_where set clause='".str_replace("'","''",$_GET["clause"])."' where idtheme='".$_GET["idtheme"]."'";
 	$DB->exec($requete);
 	}
 	else

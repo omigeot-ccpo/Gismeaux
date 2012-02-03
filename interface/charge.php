@@ -6,31 +6,31 @@ sig@meaux.fr
 
 Ce logiciel est un programme informatique fournissant une interface cartographique WEB communale. 
 
-Ce logiciel est rÃ©gi par la licence CeCILL-C soumise au droit franÃ§ais et
+Ce logiciel est régi par la licence CeCILL-C soumise au droit français et
 respectant les principes de diffusion des logiciels libres. Vous pouvez
 utiliser, modifier et/ou redistribuer ce programme sous les conditions
-de la licence CeCILL-C telle que diffusÃ©e par le CEA, le CNRS et l'INRIA 
+de la licence CeCILL-C telle que diffusée par le CEA, le CNRS et l'INRIA 
 sur le site "http://www.cecill.info".
 
-En contrepartie de l'accessibilitÃ© au code source et des droits de copie,
-de modification et de redistribution accordÃ©s par cette licence, il n'est
-offert aux utilisateurs qu'une garantie limitÃ©e.  Pour les mÃªmes raisons,
-seule une responsabilitÃ© restreinte pÃ¨se sur l'auteur du programme,  le
-titulaire des droits patrimoniaux et les concÃ©dants successifs.
+En contrepartie de l'accessibilité au code source et des droits de copie,
+de modification et de redistribution accordés par cette licence, il n'est
+offert aux utilisateurs qu'une garantie limitée.  Pour les mêmes raisons,
+seule une responsabilité restreinte pèse sur l'auteur du programme,  le
+titulaire des droits patrimoniaux et les concédants successifs.
 
-A cet Ã©gard  l'attention de l'utilisateur est attirÃ©e sur les risques
-associÃ©s au chargement,  Ã  l'utilisation,  Ã  la modification et/ou au
-dÃ©veloppement et Ã  la reproduction du logiciel par l'utilisateur Ã©tant 
-donnÃ© sa spÃ©cificitÃ© de logiciel libre, qui peut le rendre complexe Ã  
-manipuler et qui le rÃ©serve donc Ã  des dÃ©veloppeurs et des professionnels
-avertis possÃ©dant  des connaissances  informatiques approfondies.  Les
-utilisateurs sont donc invitÃ©s Ã  charger  et  tester  l'adÃ©quation  du
-logiciel Ã  leurs besoins dans des conditions permettant d'assurer la
-sÃ©curitÃ© de leurs systÃ¨mes et ou de leurs donnÃ©es et, plus gÃ©nÃ©ralement, 
-Ã  l'utiliser et l'exploiter dans les mÃªmes conditions de sÃ©curitÃ©. 
+A cet égard  l'attention de l'utilisateur est attirée sur les risques
+associés au chargement,  à l'utilisation,  à la modification et/ou au
+développement et à la reproduction du logiciel par l'utilisateur étant 
+donné sa spécificité de logiciel libre, qui peut le rendre complexe à 
+manipuler et qui le réserve donc à des développeurs et des professionnels
+avertis possédant  des connaissances  informatiques approfondies.  Les
+utilisateurs sont donc invités à charger  et  tester  l'adéquation  du
+logiciel à leurs besoins dans des conditions permettant d'assurer la
+sécurité de leurs systèmes et ou de leurs données et, plus généralement, 
+à l'utiliser et l'exploiter dans les mêmes conditions de sécurité. 
 
-Le fait que vous puissiez accÃ©der Ã  cet en-tÃªte signifie que vous avez 
-pris connaissance de la licence CeCILL-C, et que vous en avez acceptÃ© les 
+Le fait que vous puissiez accéder à cet en-tête signifie que vous avez 
+pris connaissance de la licence CeCILL-C, et que vous en avez accepté les 
 termes.*/
 //if($_GET['sansplug']=='true')
 //if($nav!=0)
@@ -41,14 +41,7 @@ header("Content-type: text/xml");
 define('GIS_ROOT', '..');
 include_once(GIS_ROOT . '/inc/common.php');
 gis_session_start();
-
-
 $extra_url = "&user=".$DB->db_user."&password=".$DB->db_passwd."&dbname=".$DB->db_name."&host=".$DB->db_host;
-
-if ($map_mode)
-        $extra_url .= "&mode=map";
-
-
 $_SESSION['zoommm'] =$_GET['zoom'];
 $_SESSION['cx'] =round($_GET["x"]+($_GET["lar"]/2));
 $_SESSION['cy'] =round( $_GET["y"]+( $_GET["hau"]/2));
@@ -73,8 +66,8 @@ $application=$app[0]['libelle_appli'];
 	$raster.=$ras[1].";";
 	}
 	$raster=substr($raster,0,strlen($raster)-1);
-	$raster=str_replace(";","&layer=",$raster);
-	
+	//$raster=str_replace(";","&layer=",$raster);
+	$raster=str_replace(";"," ",$raster);
 	$erreur=error_reporting ();
 	error_reporting (1);
 
@@ -83,22 +76,12 @@ $serv="127.0.0.1";
 if(substr($_SESSION['profil']->insee, -3)=='000')
 	{
 
-	$url="http://".$serv."/cgi-bin/mapserv?map=".$fs_root."capm/".$application.".map&map_imagetype=agg&insee=".substr($_SESSION['profil']->insee,0,3)."&layer=".$raster."&minx=".$xm."&miny=".$ym."&maxx=".$xma."&maxy=".$yma."&mapsize=1200%20840&parce=('')".$extra_url;
+	$url="http://".$serv."/cgi-bin/mapserv?map=".$fs_root."capm/".$application.".map&map_imagetype=agg&insee=".substr($_SESSION['profil']->insee,0,3)."&layers=".urlencode($raster)."&minx=".$xm."&miny=".$ym."&maxx=".$xma."&maxy=".$yma."&mapsize=1200%20840&parce=('')".$extra_url;
 	}
 	else
 	{
-	$url="http://".$serv."/cgi-bin/mapserv?map=".$fs_root."capm/".$application.".map&map_imagetype=agg&insee=".$_SESSION['profil']->insee."&layer=".$raster."&minx=".$xm."&miny=".$ym."&maxx=".$xma."&maxy=".$yma."&mapsize=1200%20840&parce=('')".$extra_url;
+	$url="http://".$serv."/cgi-bin/mapserv?map=".$fs_root."capm/".$application.".map&map_imagetype=agg&insee=".$_SESSION['profil']->insee."&layers=".urlencode($raster)."&minx=".$xm."&miny=".$ym."&maxx=".$xma."&maxy=".$yma."&mapsize=1200%20840&parce=('')".$extra_url;
 	}
-if ($map_mode) {
-        $image = "msnew-" .md5($url);
-        if (!file_exists($fs_root."/tmp/".$image . ".jpg"))
-        {
-                $contenu = file_get_contents($url.$extra_url);
-                $fd = fopen($fs_root."/tmp/".$image . ".jpg" ,'w');
-                fwrite($fd,$contenu);
-                fclose($fd);
-        }
-} else {
 	$contenu=file($url);
        		while (list($ligne,$cont)=each($contenu)){
 			$numligne[$ligne]=$cont;
@@ -107,7 +90,7 @@ if ($map_mode) {
 		$image=explode('/',$texte);
 		$conte1=explode('.',$image[4]);
 		$image=$conte1[0];
-	}
+	
 		$textq.="<g id='".$_GET['layer']."' n='../tmp/".$image.".jpg'>\n";
 		//$da=date("His");
 		//$textq.="<image id='ima' x='". $_GET["x"]."' y='". $_GET["y"]."' width='". $_GET["lar"]."' height='". $_GET["hau"]."' ></image>";
@@ -125,15 +108,15 @@ $rast=utf8_decode( $_GET["raster"]);
 }
 if($nav=="1")
 {
-$rast=str_replace("chr(224)","Ã ",$_GET["raster"]);
-$rast=str_replace("chr(233)","Ã©",$rast);
-$rast=str_replace("chr(232)","Ã¨",$rast);
-$rast=str_replace("chr(234)","Ãª",$rast);
-$rast=str_replace("chr(226)","Ã¢",$rast);
-$rast=str_replace("chr(231)","Ã§",$rast);
-$rast=str_replace("chr(244)","Ã´",$rast);
-$rast=str_replace("chr(238)","Ã®",$rast);
-$rast=str_replace("chr(251)","Ã»",$rast);
+$rast=str_replace("chr(224)","à",$_GET["raster"]);
+$rast=str_replace("chr(233)","é",$rast);
+$rast=str_replace("chr(232)","è",$rast);
+$rast=str_replace("chr(234)","ê",$rast);
+$rast=str_replace("chr(226)","â",$rast);
+$rast=str_replace("chr(231)","ç",$rast);
+$rast=str_replace("chr(244)","ô",$rast);
+$rast=str_replace("chr(238)","î",$rast);
+$rast=str_replace("chr(251)","û",$rast);
 $rast=str_replace("chr(60)","<",$rast);
 $rast=str_replace("chr(62)",">",$rast);
 $rast=str_replace("chr(63)","?",$rast);
@@ -177,7 +160,7 @@ $re=$DB->tab_result($sq);
 $sq="select gid,assvg(Translate(Transform(the_geom,".$projection."),-".$_SESSION['xini'].",-".$_SESSION['yini'].",0),1,6) as geom,contenu,definition from admin_svg.postit where (utilisateur like'".$_SESSION['profil']->idutilisateur."' or utilisateur like'".$_SESSION['profil']->idutilisateur.",%' or utilisateur like'%,".$_SESSION['profil']->idutilisateur.",%' or utilisateur like'%,".$_SESSION['profil']->idutilisateur."') and definition <>'haute'";
 $re=$DB->tab_result($sq);
 	for($i=0;$i<count($re);$i++)
-{
+	{
 	$coordo = explode(' ', $re[$i]['geom']);
 	$coorx.=substr($coordo[0],3,-1)."|";	
 	$coory.=substr($coordo[1],3,-1)."|";
@@ -198,7 +181,8 @@ $re=$DB->tab_result($sq);
 else
 {
 
-$sql="select theme.schema,theme.tabl,col_theme.colonn,col_theme.valeur_mini,col_theme.valeur_maxi,col_theme.valeur_texte,sinul(col_theme.fill, style.fill) as fill,sinul(col_theme.stroke_rgb, style.stroke_rgb) as stroke_rgb,sinul(col_theme.symbole,style.symbole) as symbole,sinul(col_theme.opacity,style.opacity) as opacity,sinul(col_theme.font_familly,style.font_familly) as font_familly,sinul(col_theme.font_size,style.font_size) as font_size,appthe.mouseover,appthe.mouseout,appthe.click,appthe.idtheme,sinul(appthe.partiel,theme.partiel) as partiel,sinul(col_theme.stroke_width,style.stroke_width) as stroke_width,appthe.pointer_events from admin_svg.appthe join admin_svg.theme on appthe.idtheme=theme.idtheme left outer join  admin_svg.col_theme on appthe.idappthe=col_theme.idappthe left outer join  admin_svg.style on appthe.idtheme=style.idtheme where appthe.idapplication='".$_SESSION['profil']->appli."' and (col_theme.intitule_legende='".$rast."' or theme.libelle_them='".$rast."') and appthe.idappthe='".$id."'";
+$sql="select theme.schema,theme.tabl,col_theme.colonn,col_theme.valeur_mini,col_theme.valeur_maxi,col_theme.valeur_texte,sinul(col_theme.fill, style.fill) as fill,sinul(col_theme.stroke_rgb, style.stroke_rgb) as stroke_rgb,sinul(col_theme.symbole,style.symbole) as symbole,sinul(col_theme.opacity,style.opacity) as opacity,sinul(col_theme.font_familly,style.font_familly) as font_familly,sinul(col_theme.font_size,style.font_size) as font_size,appthe.mouseover,appthe.mouseout,appthe.click,appthe.idtheme,sinul(appthe.partiel,theme.partiel) as partiel,sinul(col_theme.stroke_width,style.stroke_width) as stroke_width,appthe.pointer_events,sinul(col_theme.fixe_symbole,style.fixe_symbole) as fixe from admin_svg.appthe join admin_svg.theme on appthe.idtheme=theme.idtheme left outer join  admin_svg.col_theme on appthe.idappthe=col_theme.idappthe left outer join  admin_svg.style on appthe.idtheme=style.idtheme where appthe.idapplication='".$_SESSION['profil']->appli."' and (col_theme.intitule_legende='".$rast."' or theme.libelle_them='".$rast."') and appthe.idappthe='".$id."'";
+
 $cou=$DB->tab_result($sql);
 $rotation='false';
 $d="select * from admin_svg.col_sel where idtheme='".$cou[0]['idtheme']."'";
@@ -229,12 +213,16 @@ $d="select * from admin_svg.col_sel where idtheme='".$cou[0]['idtheme']."'";
 				if (substr($_SESSION['profil']->insee, -3) == "000")
 					{
 					
-                	$f.=" where (code_insee like '".substr($_SESSION['profil']->insee,0,3)."%' or code_insee is null) and Transform(".$geometrie.",".$projection.") && box'($xm,$ym,$xma,$yma)'";
-            		}
+                	//$f.=" where (code_insee like '".substr($_SESSION['profil']->insee,0,3)."%' or code_insee is null) and Transform(".$geometrie.",".$projection.") && box'($xm,$ym,$xma,$yma)'";
+            		$f.=" where (code_insee like '".substr($_SESSION['profil']->insee,0,3)."%' or code_insee is null) and ".$geometrie." && st_transform (ST_GeomFromText('POLYGON(($xm $ym,$xma $ym,$xma $yma,$xm $yma,$xm $ym))',".$projection."),find_srid('','".$cou[0]['schema'].".".$cou[0]['tabl']."','".$geometrie."'))";
+					}
 				else
 					{
 					
-                	$f.=" where (code_insee like '".$_SESSION['profil']->insee."%' or code_insee is null) and Transform(".$geometrie.",".$projection.") && box'($xm,$ym,$xma,$yma)'";
+                	//$f.=" where (code_insee like '".$_SESSION['profil']->insee."%' or code_insee is null) and Transform(".$geometrie.",".$projection.") && box'($xm,$ym,$xma,$yma)'";
+					
+					$f.=" where (code_insee like '".$_SESSION['profil']->insee."%' or code_insee is null) and ".$geometrie." && st_transform (ST_GeomFromText('POLYGON(($xm $ym,$xma $ym,$xma $yma,$xm $yma,$xm $ym))',".$projection."),find_srid('','".$cou[0]['schema'].".".$cou[0]['tabl']."','".$geometrie."'))";
+					
             		}
 			}
 			else
@@ -276,17 +264,19 @@ $d="select * from admin_svg.col_sel where idtheme='".$cou[0]['idtheme']."'";
 		
 		if($geometrie!="")
 		{
-		$dd="select distinct geometrytype(".$geometrie.") as geome from ".$cou[0]['schema'].".".$cou[0]['tabl'];
+		$dd="select type as geome from public.geometry_columns where f_table_schema='".$cou[0]['schema']."' and f_table_name='".$cou[0]['tabl']."' and  f_geometry_column='".$geometrie."'";
+		
+		/*$dd="select distinct geometrytype(".$geometrie.") as geome from ".$cou[0]['schema'].".".$cou[0]['tabl'];
 		if($whr[0]['clause']!='')
 		{
 		$dd.=" where ".str_replace("VALEUR","'".$_SESSION['profil']->insee."'",$whr[0]['clause']);
-		}
+		}*/
 		$geo=$DB->tab_result($dd);
 		if(($geo[0]['geome']=="POINT" || $geo[0]['geome']=="MULTIPOINT") AND $cou[0]['symbole']!="") //si symbole
 		{
 			$type_geo="symbole";
 		}
-		else if($geo[0]['geome']=="POINT") //si texte
+		else if($geo[0]['geome']=="POINT"  AND $cou[0]['font_size']!='') //si texte
 		{
 		$type_geo="texte";
 		}
@@ -343,7 +333,7 @@ if($cou[0]['mouseover']!=''||$cou[0]['click']!='')
 {
 	if($type_geo=="symbole")
 				{
-				$textq="<g id=\"".$_GET['layer']."\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" taille=\"".$cou[0]['font_size']."\" surcoul=\"blue\" fixe=\"\" lie=\"".$cou[0]['click']."\" attribu=\"symbole\" ";
+				$textq="<g id=\"".$_GET['layer']."\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" taille=\"".$cou[0]['font_size']."\" surcoul=\"blue\" fixe=\"".$cou[0]['fixe']."\" lie=\"".$cou[0]['click']."\" attribu=\"symbole\" ";
 				$rot='';
 				for ($e=0;$e<count($res);$e++)
 					{
@@ -358,23 +348,7 @@ if($cou[0]['mouseover']!=''||$cou[0]['click']!='')
 					{
 					$rot.=$res[$e]['rotation']."|";
 					}
-					
-					//<use  id='".$re[$i]['gid']."' n='".utf8_decode($re[$i]['contenu'])."' transform=\"matrix(0.010 0 0 -0.010 ".$coordox." ".$coordoy.")\" xlink:href=\"#o\" />
-					//$textq.="<a id='li_lien".$res[$e]['ident']."'><text ".$res[$e]['geom']." id='".$res[$e]['ident']."' font-family='fontsvg' ";
-					/*$coord = explode(' ', $res[$e]['geom']); 
-					$coordx=substr($coord[0],3,-1);	
-					$coordy=substr($coord[1],3,-1);
-					$textq.="<a id='li_lien".$res[$e]['ident']."'><use id='".$res[$e]['ident']."' transform=\"matrix(0.0".round($cou[0]['font_size']/2.4)." 0 0 -0.0".round($cou[0]['font_size']/2.4)." ".$coordx." ".$coordy.")\" ";
-					if($res[$e]['ad']!="")
-					{
-					$textq.="n='".$res[$e]['ad']."' ";
-					}
-					if($res[$e]['relation']!="")
-					{
-					$textq.="rel='".$res[$e]['relation']."' ";
-					}
-					//$textq.=">".$cou[0]['symbole']."</text></a>\n";
-					$textq.="xlink:href=\"#".$cou[0]['symbole']."\"/></a>\n";	*/				
+							
 					}
 					$textq.="coorx=\"".substr($coorx,0,-1)."\" coory=\"".substr($coory,0,-1)."\" ref=\"".substr($ref,0,-1)."\" coul=\"".substr($coul,0,-1)."\" rotation=\"".substr($rot,0,-1)."\" ident=\"".substr($ident,0,-1)."\" contenu=\"".substr($tex,0,-1)."\">";
 				}
@@ -444,7 +418,7 @@ else
 {	
 	if($type_geo=="symbole")
 				{
-				$textq="<g id=\"".$_GET['layer']."\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" taille=\"".$cou[0]['font_size']."\" surcoul=\"blue\" lie=\"\" fixe=\"\" attribu=\"symbole\" ";
+				$textq="<g id=\"".$_GET['layer']."\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" taille=\"".$cou[0]['font_size']."\" surcoul=\"blue\" lie=\"\" fixe=\"".$cou[0]['fixe']."\" attribu=\"symbole\" ";
 				$rot="";
 				for ($e=0;$e<count($res);$e++)
 					{
@@ -460,15 +434,7 @@ else
 					{
 					$rot.=$res[$e]['rotation']."|";
 					}
-					//$tex.=utf8_decode($res[$e]['ad'])."|";
-					
-					//$textq.="<text ".$res[$e]['geom']." id='".$res[$e]['ident']."' font-family='fontsvg' ";
-					//$textq.=">".$cou[0]['symbole']."</text>\n";
-					/*$coord = explode(' ', $res[$e]['geom']); 
-					$coordx=substr($coord[0],3,-1);	
-					$coordy=substr($coord[1],3,-1);
-					$textq.="<use id='".$res[$e]['ident']."' transform=\"matrix(".round($cou[0]['font_size']/2048,4)." 0 0 -".(round($cou[0]['font_size']/2048,4))." ".$coordx." ".$coordy.")\" ";
-					$textq.="xlink:href=\"#".$cou[0]['symbole']."\"/>\n";	*/				
+								
 					}
 					
 					}
@@ -519,4 +485,3 @@ else
 echo $textq;
 
 ?>
-

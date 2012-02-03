@@ -56,7 +56,16 @@ $liblar="select (Xmax(Transform(commune.the_geom,$projection))::real - Xmin(Tran
 $lar=$DB->tab_result($liblar);
 $coef_echelle=$lar[0]['lar']*2.32;
 
-$projdef="+init=epsg:".$projection;
+$proj_def="select auth_name,proj4text from public.spatial_ref_sys where auth_srid=".$projection ;
+$proj_defau=$DB->tab_result($proj_def);
+	if($proj_defau[0]['auth_name']='IGNF')
+	{
+	$projdef=substr($proj_defau[0]['proj4text'],1);
+	}
+	else
+	{
+	$projdef="init=epsg:".$projection;
+	}
 	
 
 $mapcotation="LAYER \n";
@@ -298,37 +307,30 @@ $result_proj=$DB->tab_result($proj);
 
 if($result_proj[0]['srid']!='-1' && $result_proj[0]['srid']!='' && !is_null($result_proj[0]['srid']))
 {
-	$resulproj="+init=epsg:".$result_proj[0]['srid'];
+$def_proj="select auth_name,proj4text from public.spatial_ref_sys where auth_srid=".$result_proj[0]['srid'];
+$result_def_proj=$DB->tab_result($def_proj);
+	if($result_def_proj[0]['auth_name']='IGNF')
+	{
+	$resulproj=substr($result_def_proj[0]['proj4text'],1);
+	}
+	else
+	{
+	$resulproj="init=epsg:".$result_proj[0]['srid'];
+	}
 }
 else
-{
-	$resulproj="+init=epsg:".$projection;
-}
-
-//$def_proj="select auth_name,proj4text from public.spatial_ref_sys where auth_srid=".$result_proj[0]['srid'];
-//$result_def_proj=$DB->tab_result($def_proj);
-//if($result_def_proj[0]['auth_name']='IGNF')
-//{
-//	$resulproj=substr($result_def_proj[0]['proj4text'],1);
-//}
-//else
-//{
-//	$resulproj="+init=epsg:".$result_proj[0]['srid'];
-//}
-//}
-//else
-//	{
-//	$def_proj="select auth_name,proj4text from public.spatial_ref_sys where auth_srid=".$projection;
-//$result_def_proj=$DB->tab_result($def_proj);
-//	if($result_def_proj[0]['auth_name']='IGNF')
-//	{
-//	$resulproj=substr($result_def_proj[0]['proj4text'],1);
-//	}
-//	else
-//	{
-	$resulproj="+init=epsg:".$projection;
-//	}
-//	}
+	{
+	$def_proj="select auth_name,proj4text from public.spatial_ref_sys where auth_srid=".$projection;
+$result_def_proj=$DB->tab_result($def_proj);
+	if($result_def_proj[0]['auth_name']='IGNF')
+	{
+	$resulproj=substr($result_def_proj[0]['proj4text'],1);
+	}
+	else
+	{
+	$resulproj="init=epsg:".$projection;
+	}
+	}
 }
 $j="select * from admin_svg.col_where where idtheme='".$cou[$c]['idtheme']."'";
 		$whr=$DB->tab_result($j);
@@ -372,7 +374,7 @@ $req1="select distinct (col_theme.intitule_legende) as intitule_legende,col_them
 			}
 			else
 			{
-			$maprecherche.="DATA \"".str_replace(" ","",$col[0]['appel'])." from (select ".str_replace(" ","",$col[0]['appel'])." from ".$cou[$c]['schema'].".".$cou[$c]['tabl']." where ".$clause." and ".$cou[$c]['tabl'].".code_insee like '%insee%%') as neo using unique ".str_replace(" ","",$col[0]['appel'])."\" \n";
+			$maprecherche.="DATA \"".str_replace(" ","",$col[0]['appel'])." from (select ".str_replace(" ","",$col[0]['appel'])." from ".$cou[$c]['schema'].".".$cou[$c]['tabl']." where ".$clause." and (".$cou[$c]['tabl'].".code_insee like '%insee%%' or code_insee is null)) as neo using unique ".str_replace(" ","",$col[0]['appel'])."\" \n";
 			}
 			$maprecherche.="STATUS on \n";
 			$maprecherche.="PROJECTION \n";
@@ -417,7 +419,7 @@ $req1="select distinct (col_theme.intitule_legende) as intitule_legende,col_them
 	}
 	else
 	{
-	$mapprincipal.="DATA \"".str_replace(" ","",$col[0]['appel'])." from (select ".str_replace(" ","",$col[0]['appel'])." from ".$cou[$c]['schema'].".".$cou[$c]['tabl']." where ".$clause." and ".$cou[$c]['tabl'].".code_insee like '%insee%%') as neo using unique ".str_replace(" ","",$col[0]['appel'])."\" \n";
+	$mapprincipal.="DATA \"".str_replace(" ","",$col[0]['appel'])." from (select ".str_replace(" ","",$col[0]['appel']).",".$cou[$c]['colonn']." from ".$cou[$c]['schema'].".".$cou[$c]['tabl']." where ".$clause." and (".$cou[$c]['tabl'].".code_insee like '%insee%%' or code_insee is null)) as neo using unique ".str_replace(" ","",$col[0]['appel'])."\" \n";
 	}
 	$mapprincipal.="STATUS on \n";
 	$mapprincipal.="PROJECTION \n";
@@ -434,9 +436,9 @@ $req1="select distinct (col_theme.intitule_legende) as intitule_legende,col_them
 		{
 		$mapprincipal.="STYLE \n";
 		$mapprincipal.="COLOR ".str_replace(","," ",$couch[$r]['fill'])." \n";
-		if($couch[$r]['opacity']!='' && $couch[$r]['opacity']!='none' && $couch[$r]['opacity']!='1' )
+		if($couch[$r]['opacity']!='' && $couch[$r]['opactity']!='none' && $couch[$r]['opacity']!='1' )
 		{
-		$mapprincipal.="OPACITY ".($couch[$r]['opacity']*100)." \n";
+		$mapprincipal.="OPACITY ".($couch[$r]['opactity']*100)." \n";
 		}
 		$mapprincipal.="END \n";
 		}
@@ -459,7 +461,7 @@ $req1="select distinct (col_theme.intitule_legende) as intitule_legende,col_them
 	}
 	else
 	{
-	$$mapp.="DATA \"".str_replace(" ","",$col[0]['appel'])." from (select ".str_replace(" ","",$col[0]['appel'])." from ".$cou[$c]['schema'].".".$cou[$c]['tabl']." where ".$clause." and ".$cou[$c]['tabl'].".code_insee like '%insee%%') as neo using unique ".str_replace(" ","",$col[0]['appel'])."\" \n";
+	$$mapp.="DATA \"".str_replace(" ","",$col[0]['appel'])." from (select ".str_replace(" ","",$col[0]['appel']).",".$cou[$c]['colonn']." from ".$cou[$c]['schema'].".".$cou[$c]['tabl']." where ".$clause." and (".$cou[$c]['tabl'].".code_insee like '%insee%%' or code_insee is null)) as neo using unique ".str_replace(" ","",$col[0]['appel'])."\" \n";
 	}
 	$$mapp.="STATUS on \n";
 	$$mapp.="PROJECTION \n";
@@ -537,9 +539,9 @@ $req1="select distinct (col_theme.intitule_legende) as intitule_legende,col_them
 		{
 		$$mapp.="STYLE \n";
 		$$mapp.="COLOR ".str_replace(","," ",$couch[$r]['fill'])." \n";
-		if($couch[$r]['opacity']!='' && $couch[$r]['opacity']!='none' && $couch[$r]['opacity']!='1' )
+		if($couch[$r]['opacity']!='' && $couch[$r]['opactity']!='none' && $couch[$r]['opacity']!='1' )
 		{
-		$$mapp.="OPACITY ".($couch[$r]['opacity']*100)." \n";
+		$$mapp.="OPACITY ".($couch[$r]['opactity']*100)." \n";
 		}
 		$$mapp.="END \n";
 		}
@@ -576,7 +578,7 @@ $$mapp.="END \n \n";
 			}
 			else
 			{
-			$maprecherche.="DATA \"".str_replace(" ","",$col[0]['appel'])." from (select ".str_replace(" ","",$col[0]['appel'])." from ".$cou[$c]['schema'].".".$cou[$c]['tabl']." where ".$clause." and ".$cou[$c]['tabl'].".code_insee like '%insee%%') as neo using unique ".str_replace(" ","",$col[0]['appel'])."\" \n";
+			$maprecherche.="DATA \"".str_replace(" ","",$col[0]['appel'])." from (select ".str_replace(" ","",$col[0]['appel'])." from ".$cou[$c]['schema'].".".$cou[$c]['tabl']." where ".$clause." and (".$cou[$c]['tabl'].".code_insee like '%insee%%' or code_insee is null)) as neo using unique ".str_replace(" ","",$col[0]['appel'])."\" \n";
 			}
 			$maprecherche.="STATUS on \n";
 			$maprecherche.="PROJECTION \n";
@@ -615,7 +617,7 @@ $$mapp.="END \n \n";
 				}
 				else
 				{
-				$mapprincipal.="DATA \"".str_replace(" ","",$col[0]['appel'])." from (select ".str_replace(" ","",$col[0]['appel'])." from ".$cou[$c]['schema'].".".$cou[$c]['tabl']." where ".$clause." and ".$cou[$c]['tabl'].".code_insee like '%insee%%') as neo using unique ".str_replace(" ","",$col[0]['appel'])."\" \n";
+				$mapprincipal.="DATA \"".str_replace(" ","",$col[0]['appel'])." from (select ".str_replace(" ","",$col[0]['appel'])." from ".$cou[$c]['schema'].".".$cou[$c]['tabl']." where ".$clause." and (".$cou[$c]['tabl'].".code_insee like '%insee%%' or code_insee is null)) as neo using unique ".str_replace(" ","",$col[0]['appel'])."\" \n";
 				}
 				$mapprincipal.="STATUS on \n";
 				$mapprincipal.="PROJECTION \n";
@@ -631,7 +633,7 @@ $$mapp.="END \n \n";
 				{
 				$mapprincipal.="STYLE \n";
 				$mapprincipal.="COLOR ".str_replace(","," ",$cou[$c]['style_fill'])." \n";
-					if($cou[$c]['style_opacity']!='' && $cou[$c]['style_opacity']!='none' )
+					if($cou[$c]['style_opacity']!='' && $cou[$c]['style_opactity']!='none' )
 					{
 					$mapprincipal.="OPACITY ".($cou[$c]['style_opacity']*100)." \n";
 					}
@@ -660,7 +662,7 @@ $$mapp.="END \n \n";
 				}
 				else
 				{
-				$$mapp.="DATA \"".str_replace(" ","",$col[0]['appel'])." from (select ".str_replace(" ","",$col[0]['appel'])." from ".$cou[$c]['schema'].".".$cou[$c]['tabl']." where ".$clause." and ".$cou[$c]['tabl'].".code_insee like '%insee%%') as neo using unique ".str_replace(" ","",$col[0]['appel'])."\" \n";
+				$$mapp.="DATA \"".str_replace(" ","",$col[0]['appel'])." from (select ".str_replace(" ","",$col[0]['appel'])." from ".$cou[$c]['schema'].".".$cou[$c]['tabl']." where ".$clause." and (".$cou[$c]['tabl'].".code_insee like '%insee%%' or code_insee is null)) as neo using unique ".str_replace(" ","",$col[0]['appel'])."\" \n";
 				}
 				$$mapp.="STATUS on \n";
 				$$mapp.="PROJECTION \n";
@@ -734,7 +736,7 @@ $$mapp.="END \n \n";
 					{
 					$$mapp.="STYLE \n";
 					$$mapp.="COLOR ".str_replace(","," ",$cou[$c]['style_fill'])." \n";
-						if($cou[$c]['style_opacity']!='' && $cou[$c]['style_opacity']!='none' )
+						if($cou[$c]['style_opacity']!='' && $cou[$c]['style_opactity']!='none' )
 						{
 						$$mapp.="OPACITY ".($cou[$c]['style_opacity']*100)." \n";
 						}

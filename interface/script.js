@@ -4,31 +4,31 @@ sig@meaux.fr
 
 Ce logiciel est un programme informatique fournissant une interface cartographique WEB communale. 
 
-Ce logiciel est rÃ©gi par la licence CeCILL-C soumise au droit franÃ§ais et
+Ce logiciel est régi par la licence CeCILL-C soumise au droit français et
 respectant les principes de diffusion des logiciels libres. Vous pouvez
 utiliser, modifier et/ou redistribuer ce programme sous les conditions
-de la licence CeCILL-C telle que diffusÃ©e par le CEA, le CNRS et l'INRIA 
+de la licence CeCILL-C telle que diffusée par le CEA, le CNRS et l'INRIA 
 sur le site "http://www.cecill.info".
 
-En contrepartie de l'accessibilitÃ© au code source et des droits de copie,
-de modification et de redistribution accordÃ©s par cette licence, il n'est
-offert aux utilisateurs qu'une garantie limitÃ©e.  Pour les mÃªmes raisons,
-seule une responsabilitÃ© restreinte pÃ¨se sur l'auteur du programme,  le
-titulaire des droits patrimoniaux et les concÃ©dants successifs.
+En contrepartie de l'accessibilité au code source et des droits de copie,
+de modification et de redistribution accordés par cette licence, il n'est
+offert aux utilisateurs qu'une garantie limitée.  Pour les mêmes raisons,
+seule une responsabilité restreinte pèse sur l'auteur du programme,  le
+titulaire des droits patrimoniaux et les concédants successifs.
 
-A cet Ã©gard  l'attention de l'utilisateur est attirÃ©e sur les risques
-associÃ©s au chargement,  Ã  l'utilisation,  Ã  la modification et/ou au
-dÃ©veloppement et Ã  la reproduction du logiciel par l'utilisateur Ã©tant 
-donnÃ© sa spÃ©cificitÃ© de logiciel libre, qui peut le rendre complexe Ã  
-manipuler et qui le rÃ©serve donc Ã  des dÃ©veloppeurs et des professionnels
-avertis possÃ©dant  des connaissances  informatiques approfondies.  Les
-utilisateurs sont donc invitÃ©s Ã  charger  et  tester  l'adÃ©quation  du
-logiciel Ã  leurs besoins dans des conditions permettant d'assurer la
-sÃ©curitÃ© de leurs systÃ¨mes et ou de leurs donnÃ©es et, plus gÃ©nÃ©ralement, 
-Ã  l'utiliser et l'exploiter dans les mÃªmes conditions de sÃ©curitÃ©. 
+A cet égard  l'attention de l'utilisateur est attirée sur les risques
+associés au chargement,  à l'utilisation,  à la modification et/ou au
+développement et à la reproduction du logiciel par l'utilisateur étant 
+donné sa spécificité de logiciel libre, qui peut le rendre complexe à 
+manipuler et qui le réserve donc à des développeurs et des professionnels
+avertis possédant  des connaissances  informatiques approfondies.  Les
+utilisateurs sont donc invités à charger  et  tester  l'adéquation  du
+logiciel à leurs besoins dans des conditions permettant d'assurer la
+sécurité de leurs systèmes et ou de leurs données et, plus généralement, 
+à l'utiliser et l'exploiter dans les mêmes conditions de sécurité. 
 
-Le fait que vous puissiez accÃ©der Ã  cet en-tÃªte signifie que vous avez 
-pris connaissance de la licence CeCILL-C, et que vous en avez acceptÃ© les 
+Le fait que vous puissiez accéder à cet en-tête signifie que vous avez 
+pris connaissance de la licence CeCILL-C, et que vous en avez accepté les 
 termes.
 test mise a jour
 */
@@ -60,7 +60,7 @@ if(nav!=0 && (document &&
 sansplug='true';
 }
 Zoomto(evt,zoomVal);
-zoomrecherche=2400;
+zoomrecherche=1500;
 if(zoomrecherche>zoommax)
 {zoomrecherche=zoommax;}
 }
@@ -493,7 +493,6 @@ function gest_zoom(evt,tovalue)
 function Zoomto(evt,tovalue,x)
 {
 	
-	//svgdoc.getElementById("rectzoom").setAttributeNS(null,'y',109-((tovalue-zoommin)/(zoommax-zoommin))*79);
 	svgdoc.getElementById("rectzoom").setAttributeNS(null,'y',109-Math.pow(((tovalue-zoommin)/(zoommax-zoommin)),1/3)*79);
 	zoomVal = parseInt(tovalue);
 	theZoom  = zoomVal;
@@ -688,6 +687,89 @@ if(window.top.document.getElementById('coche_masque').checked==false)
 						{
 						svgdoc.getElementById('dessin').setAttributeNS(null,'clip-path', 'url(#masque)');	
 						}
+}
+
+function chargeinit(x)
+{
+	
+var reg=new RegExp("[#]+", "g");
+	var coucheinit=x.split(reg);	
+	var nbcou = coucheinit.length ;
+	var reg1=new RegExp("[,]", "g");
+	var reg2=new RegExp("[;]", "g");
+	
+	if(nbcou>1)
+	{
+		
+		for (var i=0; i<nbcou; i++) 
+			{
+				
+			var vale=coucheinit[i].split(reg1);
+			var tablayers=vale[1].split(reg2);	
+			var nblayer = tablayers.length ;
+			
+				if(nblayer>1)
+				{
+					svgdoc.getElementById('control'+parseInt(tablayers[0])).setAttributeNS(null,'visibility','visible');
+					window.top.document.getElementById('coche'+parseInt(tablayers[0])).checked=true;
+					
+					if(vale[3]=="raster" || zlayer[vale[0]].svg_zoomraster>zoomVal || ((nWidth*3300/larmap)>5221 && zlayer[vale[0]].svg_partiel=='1'))
+							{	
+								coucherastervisible+=vale[0]+";";
+							}
+					else
+							{
+								var cher=new RegExp("[|]", "g");
+								var tableau=vale[0].split(cher);
+								for (var i=0; i<tableau.length; i++) 
+								{
+									zlayer[tableau[i]].svg_visible='true';
+								}
+							}
+							
+					for(i=0;i<nblayer;i++)
+						{
+						
+						window.top.document.getElementById('coche'+tablayers[i]).checked=true;
+						svgdoc.getElementById('control'+tablayers[i]).setAttributeNS(null,'visibility','visible');
+						}			
+				
+					couche_init=0;
+				}
+				else
+				{
+					
+				svgdoc.getElementById('control'+vale[1]).setAttributeNS(null,'visibility','visible');
+				window.top.document.getElementById('coche'+vale[1]).checked=true;
+				if(isNaN(vale[1]))
+						 {
+							window.top.document.getElementById('coche'+parseInt(vale[1])).checked=true;
+						 }
+						 
+						if(vale[3]=="raster" || (zlayer[vale[0]].svg_zoomraster>zoomVal || ((nWidth*3300/larmap)>5221 && zlayer[vale[0]].svg_partiel=='1')))
+							{	
+								coucherastervisible+=vale[0]+";";
+								
+								
+							}
+						else
+							{
+								zlayer[vale[0]].svg_visible='true';
+								
+							}
+					
+				}
+			}
+			lecture_control();
+			
+	}
+	else
+	{
+	
+	var vale=x.split(reg1);
+	extracthtml(vale[0],vale[1],vale[2],vale[3]);	
+	}
+	
 }
 
 function extracthtml(libelle,couche,id,raster)
@@ -912,9 +994,13 @@ function create_use(id,fixe,x,y,coul,size,su,lie,elem,symbo,rota,contenu)
 	var taille=(largeurini/6000)*size;
 		if(fixe=="true")
 	{
-		taille=taille*1000/theZoom;
+		/*larmap=780;
+		haumap=546
+		nWidth  + "&hau=" + nHeight*/
 		
+		//taille=taille*1000/theZoom;
 		
+		taille=10*size*nWidth/largeurini;
 		
 		//taille=(size*15)-Math.pow(((theZoom-zoommin)/(zoommax-zoommin)),1/8)*14*size;
 		//taille=((size*10)-((theZoom-zoommin)*9*size/(zoommax-zoommin)));
@@ -1119,7 +1205,7 @@ for(a=0;a<n;a++)
 			{
 							
 							suppvarraster(layer[b]);
-							if((zlayer[layer[b]].svg_zoom_charge=='' || (zlayer[layer[b]].svg_force_charge=='1' && couche_init==1)) || layer[b]=='000.postit')
+							if((zlayer[layer[b]].svg_zoom_charge=='' || (zlayer[layer[b]].svg_force_charge=='1' && couche_init==1)) || layer[b]=='000.postit' || zlayer[layer[b]].svg_fixe_symbole=='true')
 								{
 									couchesvgvisible=layer[b];
 									zlayer[layer[b]].svg_zoom_charge=zoomVal;
@@ -2125,7 +2211,7 @@ chargement=1;
 var inser='770'+val.substring(0,3)+'   '+val.substring(6);
 parcelle_appia.push(inser);
 
-var url='locali.php?sansplug='+sansplug+'&parcelle=' + val + '&sessionname=' + sessionname + '&sessionid=' + sessionid + '&xini=' + xini + '&yini=' + yini;
+var url='locali.php?sansplug='+sansplug+'&parcelle=' + c + '&sessionname=' + sessionname + '&sessionid=' + sessionid + '&xini=' + xini + '&yini=' + yini;
 getSVGObject(url,retourrecherche);
 }
 else
@@ -2151,7 +2237,7 @@ function cadrage(pa)
 {
 chargement=1;
 var tttt=pa.join(",");
-var vale=tttt.substring(3,6)+'000'+tttt.substring(9);
+var vale=tttt.substring(3,6)+'000'+tttt.substring(9,15).replace(' ','0');
 var url='locali.php?sansplug='+sansplug+'&parcelle=' + vale + '&sessionname=' + sessionname + '&sessionid=' + sessionid + '&xini=' + xini + '&yini=' + yini+'t='+vale;
 getSVGObject(url,retourrecherche);	
 }
@@ -2200,7 +2286,19 @@ ynulcorner=parseFloat(svgRect.getAttributeNS(null,'y'));;
 	rectOveXcorner = parseFloat(rectOveXcorner + (x*100/zoomVal));
 	newViewport = xnulcorner + ' ' + ynulcorner + ' ' + rectOvewidth + ' ' + rectOveheight;
 	svgMainViewport.setAttributeNS(null,'viewBox',newViewport);
-Zoomto('',zoomrecherche);
+var vzoom=zoomrecherche;	
+	if(hauteurini*ratiovue>largeurini)
+	{
+		vzoom=(hauteurini*ratiovue * 100)/(zoomrecherche*larmap/3780);
+	}
+	else
+	{
+		vzoom=(largeurini * 100)/(zoomrecherche*larmap/3780);
+	}
+	
+	Zoomto('',vzoom);
+	
+//Zoomto('',zoomrecherche);
 }
 function recher()
 {
@@ -2987,87 +3085,4 @@ gest_zoom(evt,valz);
 	
 	
 }
-}
-
-function chargeinit(x)
-{
-	
-var reg=new RegExp("[#]+", "g");
-	var coucheinit=x.split(reg);	
-	var nbcou = coucheinit.length ;
-	var reg1=new RegExp("[,]", "g");
-	var reg2=new RegExp("[;]", "g");
-	
-	if(nbcou>1)
-	{
-		
-		for (var i=0; i<nbcou; i++) 
-			{
-				
-			var vale=coucheinit[i].split(reg1);
-			var tablayers=vale[1].split(reg2);	
-			var nblayer = tablayers.length ;
-			
-				if(nblayer>1)
-				{
-					svgdoc.getElementById('control'+parseInt(tablayers[0])).setAttributeNS(null,'visibility','visible');
-					window.top.document.getElementById('coche'+parseInt(tablayers[0])).checked=true;
-					
-					if(vale[3]=="raster" || zlayer[vale[0]].svg_zoomraster>zoomVal || ((nWidth*3300/larmap)>5221 && zlayer[vale[0]].svg_partiel=='1'))
-							{	
-								coucherastervisible+=vale[0]+";";
-							}
-					else
-							{
-								var cher=new RegExp("[|]", "g");
-								var tableau=vale[0].split(cher);
-								for (var i=0; i<tableau.length; i++) 
-								{
-									zlayer[tableau[i]].svg_visible='true';
-								}
-							}
-							
-					for(i=0;i<nblayer;i++)
-						{
-						
-						window.top.document.getElementById('coche'+tablayers[i]).checked=true;
-						svgdoc.getElementById('control'+tablayers[i]).setAttributeNS(null,'visibility','visible');
-						}			
-				
-					couche_init=0;
-				}
-				else
-				{
-					
-				svgdoc.getElementById('control'+vale[1]).setAttributeNS(null,'visibility','visible');
-				window.top.document.getElementById('coche'+vale[1]).checked=true;
-				if(isNaN(vale[1]))
-						 {
-							window.top.document.getElementById('coche'+parseInt(vale[1])).checked=true;
-						 }
-						 
-						if(vale[3]=="raster" || (zlayer[vale[0]].svg_zoomraster>zoomVal || ((nWidth*3300/larmap)>5221 && zlayer[vale[0]].svg_partiel=='1')))
-							{	
-								coucherastervisible+=vale[0]+";";
-								
-								
-							}
-						else
-							{
-								zlayer[vale[0]].svg_visible='true';
-								
-							}
-					
-				}
-			}
-			lecture_control();
-			
-	}
-	else
-	{
-	
-	var vale=x.split(reg1);
-	extracthtml(vale[0],vale[1],vale[2],vale[3]);	
-	}
-	
 }

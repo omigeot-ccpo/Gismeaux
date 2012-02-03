@@ -54,7 +54,7 @@ $DB->exec($requete);
 }
 if($_GET["clause"])
 {
-$requete="insert into admin_svg.col_where (idtheme,clause) values(currval('admin_svg.them')::character varying,'".$_GET["clause"]."')";
+$requete="insert into admin_svg.col_where (idtheme,clause) values(currval('admin_svg.them')::character varying,'".str_replace("'","''",$_GET["clause"])."')";
 $DB->exec($requete);
 }
 $d="select * from admin_svg.col_sel where idtheme=currval('admin_svg.them')::character varying";

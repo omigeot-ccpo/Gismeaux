@@ -61,12 +61,13 @@ $titre="Sur la couche parcelle";
 $n=132;
 for ($l=0;$l<count($result);$l++){
 $nom=$result[$l]['identifian'];
-if($result[$l]['commune']!="")
+if($result[$l]['nom']!="")
 {
-$nom1=$result[$l]['commune'].' ';
+$nom1=$result[$l]['nom'].' ';
 }
 //print("<text n=\"1\" x='316' y='$n' id=\"$nom\" fill=\"url(#survol)\" font-size=\"10\">$nom1$nom</text>");
 $resultat.="$nom1$nom|";
+$codage.="$nom|";
 $n=$n+13;
 }
 
