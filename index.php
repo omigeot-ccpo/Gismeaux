@@ -48,6 +48,7 @@ echo "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=iso-8859-1\
 echo "<title>GISMeaux :: Entr&eacute;e</title>";
 echo "</head>";
 echo "<body>";
+//blabla
 //echo "<p>GISMeaux :: Point d'entrée</p>";
 //echo "<p>".$_SERVER['SERVER_SIGNATURE']."</p>";
 //echo "<p>Connecté en temps que ".$_SESSION['profil']->appli." via ".$_SESSION['profil']->name."</p>";
